@@ -7,17 +7,17 @@ jobs:
   schema-updater:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: aws-cloudformation/aws-cloudformation-template-schema
           path: aws-cloudformation-template-schema
           ref: main
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: "3.9"
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a # v1.4.1
       - run: |
           cd aws-cloudformation-template-schema
           poetry install
@@ -26,7 +26,7 @@ jobs:
           mv specs/* ../schema/
           cd ..
           rm -rf aws-cloudformation-template-schema
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           commit-message: |
             CloudFormation Template Schema upgrade
