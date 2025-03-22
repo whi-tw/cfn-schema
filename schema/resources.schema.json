@@ -24196,6 +24196,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_DataZone_Connection": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-datazone-connection.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-datazone-connection.html",
+              "type": "string",
+              "enum": [
+                "AWS::DataZone::Connection"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-datazone-connection.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_NetworkFirewall_FirewallPolicy": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-networkfirewall-firewallpolicy.html",
@@ -41524,6 +41552,9 @@
             },
             {
               "$ref": "#/definitions/AWS_RolesAnywhere_CRL"
+            },
+            {
+              "$ref": "#/definitions/AWS_DataZone_Connection"
             },
             {
               "$ref": "#/definitions/AWS_NetworkFirewall_FirewallPolicy"
