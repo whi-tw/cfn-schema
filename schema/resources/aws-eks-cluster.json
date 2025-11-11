@@ -386,6 +386,10 @@
           "type": "boolean"
         }
       }
+    },
+    "DeletionProtection": {
+      "description": "Set this value to true to enable deletion protection for the cluster.",
+      "type": "boolean"
     }
   },
   "properties": {
@@ -444,6 +448,11 @@
       "type": "string",
       "pattern": "1\\.\\d\\d"
     },
+    "Force": {
+      "description": "Force cluster version update",
+      "type": "boolean",
+      "default": false
+    },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",
       "type": "array",
@@ -481,6 +490,10 @@
       "description": "Set this value to false to avoid creating the default networking add-ons when the cluster is created.",
       "type": "boolean"
     },
+    "DeletionProtection": {
+      "description": "Set this value to true to enable deletion protection for the cluster.",
+      "type": "boolean"
+    },
     "ZonalShiftConfig": {
       "$ref": "#/definitions/ZonalShiftConfig"
     }
@@ -512,8 +525,7 @@
     "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
     "/properties/Name",
     "/properties/RoleArn",
-    "/properties/BootstrapSelfManagedAddons",
-    "/properties/RemoteNetworkConfig"
+    "/properties/BootstrapSelfManagedAddons"
   ],
   "readOnlyProperties": [
     "/properties/Id",
@@ -527,7 +539,8 @@
   ],
   "writeOnlyProperties": [
     "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
-    "/properties/BootstrapSelfManagedAddons"
+    "/properties/BootstrapSelfManagedAddons",
+    "/properties/Force"
   ],
   "handlers": {
     "create": {

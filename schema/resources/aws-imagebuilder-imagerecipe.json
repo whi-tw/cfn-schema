@@ -47,6 +47,16 @@
       "description": "Specify additional settings and launch scripts for your build instances.",
       "$ref": "#/definitions/AdditionalInstanceConfiguration"
     },
+    "AmiTags": {
+      "description": "The tags to apply to the AMI created by this image recipe.",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        ".{1,}": {
+          "type": "string"
+        }
+      }
+    },
     "Tags": {
       "description": "The tags of the image recipe.",
       "type": "object",
@@ -203,7 +213,6 @@
   "required": [
     "Name",
     "Version",
-    "Components",
     "ParentImage"
   ],
   "primaryIdentifier": [
@@ -219,21 +228,17 @@
     "/properties/ParentImage",
     "/properties/Description",
     "/properties/BlockDeviceMappings",
-    "/properties/WorkingDirectory",
-    "/properties/Tags"
+    "/properties/WorkingDirectory"
   ],
-  "propertyTransform": {
-    "/properties/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
-  },
   "tagging": {
     "taggable": true,
     "tagOnCreate": true,
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "cloudFormationSystemTags": true,
     "tagProperty": "/properties/Tags",
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ]
   },
   "handlers": {
@@ -254,9 +259,15 @@
         "imagebuilder:GetImageRecipe"
       ]
     },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
+      ]
+    },
     "delete": {
       "permissions": [
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:GetImageRecipe",
         "imagebuilder:DeleteImageRecipe"
       ]

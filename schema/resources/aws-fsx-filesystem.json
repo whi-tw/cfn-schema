@@ -53,6 +53,9 @@
     "ResourceARN": {
       "type": "string"
     },
+    "NetworkType": {
+      "type": "string"
+    },
     "FileSystemType": {
       "type": "string"
     },
@@ -137,8 +140,14 @@
         "DeploymentType": {
           "type": "string"
         },
+        "ThroughputCapacity": {
+          "type": "integer"
+        },
         "DataCompressionType": {
           "type": "string"
+        },
+        "DataReadCacheConfiguration": {
+          "$ref": "#/definitions/DataReadCacheConfiguration"
         },
         "ImportPath": {
           "type": "string"
@@ -206,6 +215,9 @@
         },
         "AutomaticBackupRetentionDays": {
           "type": "integer"
+        },
+        "EndpointIpv6AddressRange": {
+          "type": "string"
         },
         "PreferredSubnetId": {
           "type": "string"
@@ -347,6 +359,9 @@
         "AutomaticBackupRetentionDays": {
           "type": "integer"
         },
+        "EndpointIpv6AddressRange": {
+          "type": "string"
+        },
         "PreferredSubnetId": {
           "type": "string"
         }
@@ -356,6 +371,18 @@
       ]
     },
     "ReadCacheConfiguration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SizingMode": {
+          "type": "string"
+        },
+        "SizeGiB": {
+          "type": "integer"
+        }
+      }
+    },
+    "DataReadCacheConfiguration": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

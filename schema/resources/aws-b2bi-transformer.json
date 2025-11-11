@@ -2,6 +2,15 @@
   "typeName": "AWS::B2BI::Transformer",
   "description": "Definition of AWS::B2BI::Transformer Resource Type",
   "definitions": {
+    "AdvancedOptions": {
+      "type": "object",
+      "properties": {
+        "X12": {
+          "$ref": "#/definitions/X12AdvancedOptions"
+        }
+      },
+      "additionalProperties": false
+    },
     "EdiType": {
       "oneOf": [
         {
@@ -17,6 +26,13 @@
           ],
           "additionalProperties": false
         }
+      ]
+    },
+    "ElementRequirement": {
+      "type": "string",
+      "enum": [
+        "OPTIONAL",
+        "MANDATORY"
       ]
     },
     "FileFormat": {
@@ -58,6 +74,9 @@
         },
         "FormatOptions": {
           "$ref": "#/definitions/FormatOptions"
+        },
+        "AdvancedOptions": {
+          "$ref": "#/definitions/AdvancedOptions"
         }
       },
       "required": [
@@ -97,6 +116,9 @@
         },
         "FormatOptions": {
           "$ref": "#/definitions/FormatOptions"
+        },
+        "AdvancedOptions": {
+          "$ref": "#/definitions/AdvancedOptions"
         }
       },
       "required": [
@@ -174,6 +196,45 @@
         "inactive"
       ]
     },
+    "X12AdvancedOptions": {
+      "type": "object",
+      "properties": {
+        "SplitOptions": {
+          "$ref": "#/definitions/X12SplitOptions"
+        },
+        "ValidationOptions": {
+          "$ref": "#/definitions/X12ValidationOptions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "X12CodeListValidationRule": {
+      "type": "object",
+      "properties": {
+        "ElementId": {
+          "type": "string",
+          "maxLength": 4,
+          "minLength": 4,
+          "pattern": "^[0-9]{4}$"
+        },
+        "CodesToAdd": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "CodesToRemove": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "ElementId"
+      ],
+      "additionalProperties": false
+    },
     "X12Details": {
       "type": "object",
       "properties": {
@@ -182,6 +243,66 @@
         },
         "Version": {
           "$ref": "#/definitions/X12Version"
+        }
+      },
+      "additionalProperties": false
+    },
+    "X12ElementLengthValidationRule": {
+      "type": "object",
+      "properties": {
+        "ElementId": {
+          "type": "string",
+          "maxLength": 4,
+          "minLength": 4,
+          "pattern": "^[0-9]{4}$"
+        },
+        "MaxLength": {
+          "type": "number",
+          "maximum": 1000000,
+          "minimum": 1
+        },
+        "MinLength": {
+          "type": "number",
+          "maximum": 1000000,
+          "minimum": 1
+        }
+      },
+      "required": [
+        "ElementId",
+        "MaxLength",
+        "MinLength"
+      ],
+      "additionalProperties": false
+    },
+    "X12ElementRequirementValidationRule": {
+      "type": "object",
+      "properties": {
+        "ElementPosition": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9]+(?:-\\d{2})(?:-\\d{2})?$"
+        },
+        "Requirement": {
+          "$ref": "#/definitions/ElementRequirement"
+        }
+      },
+      "required": [
+        "ElementPosition",
+        "Requirement"
+      ],
+      "additionalProperties": false
+    },
+    "X12SplitBy": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "TRANSACTION"
+      ]
+    },
+    "X12SplitOptions": {
+      "type": "object",
+      "properties": {
+        "SplitBy": {
+          "$ref": "#/definitions/X12SplitBy"
         }
       },
       "additionalProperties": false
@@ -533,6 +654,61 @@
         "X12_999_X231"
       ]
     },
+    "X12ValidationOptions": {
+      "type": "object",
+      "properties": {
+        "ValidationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/X12ValidationRule"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "X12ValidationRule": {
+      "oneOf": [
+        {
+          "type": "object",
+          "title": "CodeListValidationRule",
+          "properties": {
+            "CodeListValidationRule": {
+              "$ref": "#/definitions/X12CodeListValidationRule"
+            }
+          },
+          "required": [
+            "CodeListValidationRule"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "title": "ElementLengthValidationRule",
+          "properties": {
+            "ElementLengthValidationRule": {
+              "$ref": "#/definitions/X12ElementLengthValidationRule"
+            }
+          },
+          "required": [
+            "ElementLengthValidationRule"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "title": "ElementRequirementValidationRule",
+          "properties": {
+            "ElementRequirementValidationRule": {
+              "$ref": "#/definitions/X12ElementRequirementValidationRule"
+            }
+          },
+          "required": [
+            "ElementRequirementValidationRule"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
     "X12Version": {
       "type": "string",
       "enum": [
@@ -677,15 +853,15 @@
   },
   "tagging": {
     "cloudFormationSystemTags": true,
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true,
     "permissions": [
       "b2bi:ListTagsForResource",
       "b2bi:TagResource",
       "b2bi:UntagResource"
-    ]
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
   },
   "additionalProperties": false,
   "attributes": {

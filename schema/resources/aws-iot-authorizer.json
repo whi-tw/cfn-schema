@@ -73,7 +73,12 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "iot:ListTagsForResource",
+      "iot:TagResource",
+      "iot:UntagResource"
+    ]
   },
   "additionalProperties": false,
   "required": [
@@ -95,13 +100,15 @@
         "iot:CreateAuthorizer",
         "iot:DescribeAuthorizer",
         "iot:TagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "read": {
       "permissions": [
         "iot:DescribeAuthorizer",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "update": {
@@ -110,14 +117,16 @@
         "iot:DescribeAuthorizer",
         "iot:TagResource",
         "iot:UntagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "delete": {
       "permissions": [
         "iot:UpdateAuthorizer",
         "iot:DeleteAuthorizer",
-        "iot:DescribeAuthorizer"
+        "iot:DescribeAuthorizer",
+        "kms:Decrypt"
       ]
     },
     "list": {

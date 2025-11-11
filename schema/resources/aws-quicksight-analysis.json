@@ -353,6 +353,7 @@
         "UPDATE_IN_PROGRESS",
         "UPDATE_SUCCESSFUL",
         "UPDATE_FAILED",
+        "PENDING_UPDATE",
         "DELETED"
       ]
     },
@@ -3961,6 +3962,27 @@
         }
       }
     },
+    "TransposedTableOption": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ColumnWidth": {
+          "description": "String based length that is composed of value and unit in px",
+          "type": "string"
+        },
+        "ColumnIndex": {
+          "maximum": 9999,
+          "type": "number",
+          "minimum": 0
+        },
+        "ColumnType": {
+          "$ref": "#/definitions/TransposedColumnType"
+        }
+      },
+      "required": [
+        "ColumnType"
+      ]
+    },
     "AxisBinding": {
       "type": "string",
       "enum": [
@@ -6726,6 +6748,13 @@
         }
       }
     },
+    "TransposedColumnType": {
+      "type": "string",
+      "enum": [
+        "ROW_HEADER_COLUMN",
+        "VALUE_COLUMN"
+      ]
+    },
     "FilterListControl": {
       "additionalProperties": false,
       "type": "object",
@@ -9320,22 +9349,6 @@
             "$ref": "#/definitions/ParameterControl"
           }
         },
-        "TextBoxes": {
-          "minItems": 0,
-          "maxItems": 100,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SheetTextBox"
-          }
-        },
-        "Layouts": {
-          "minItems": 1,
-          "maxItems": 1,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Layout"
-          }
-        },
         "ContentType": {
           "$ref": "#/definitions/SheetContentType"
         },
@@ -9344,14 +9357,6 @@
           "pattern": "^[\\w\\-]+$",
           "type": "string",
           "maxLength": 512
-        },
-        "FilterControls": {
-          "minItems": 0,
-          "maxItems": 200,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/FilterControl"
-          }
         },
         "Images": {
           "minItems": 0,
@@ -9374,6 +9379,35 @@
           "type": "string",
           "maxLength": 1024
         },
+        "Name": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 2048
+        },
+        "TextBoxes": {
+          "minItems": 0,
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SheetTextBox"
+          }
+        },
+        "Layouts": {
+          "minItems": 1,
+          "maxItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Layout"
+          }
+        },
+        "FilterControls": {
+          "minItems": 0,
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterControl"
+          }
+        },
         "Visuals": {
           "minItems": 0,
           "maxItems": 50,
@@ -9381,11 +9415,6 @@
           "items": {
             "$ref": "#/definitions/Visual"
           }
-        },
-        "Name": {
-          "minLength": 1,
-          "type": "string",
-          "maxLength": 2048
         }
       },
       "required": [
@@ -9888,6 +9917,14 @@
         },
         "PinnedFieldOptions": {
           "$ref": "#/definitions/TablePinnedFieldOptions"
+        },
+        "TransposedTableOptions": {
+          "minItems": 0,
+          "maxItems": 10001,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransposedTableOption"
+          }
         },
         "SelectedFieldOptions": {
           "minItems": 0,

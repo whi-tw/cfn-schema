@@ -37,8 +37,14 @@
         "type": "string"
       }
     },
+    "NetworkType": {
+      "type": "string"
+    },
     "CopyTagsToSnapshot": {
       "type": "boolean"
+    },
+    "GlobalClusterIdentifier": {
+      "type": "string"
     },
     "RestoreType": {
       "type": "string"

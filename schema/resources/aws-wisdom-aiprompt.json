@@ -7,7 +7,9 @@
       "type": "string",
       "enum": [
         "ANTHROPIC_CLAUDE_MESSAGES",
-        "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
+        "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS",
+        "MESSAGES",
+        "TEXT_COMPLETIONS"
       ]
     },
     "AIPromptTemplateConfiguration": {
@@ -41,7 +43,11 @@
         "INTENT_LABELING_GENERATION",
         "QUERY_REFORMULATION",
         "SELF_SERVICE_PRE_PROCESSING",
-        "SELF_SERVICE_ANSWER_GENERATION"
+        "SELF_SERVICE_ANSWER_GENERATION",
+        "EMAIL_RESPONSE",
+        "EMAIL_OVERVIEW",
+        "EMAIL_GENERATIVE_ANSWER",
+        "EMAIL_QUERY_REFORMULATION"
       ]
     },
     "Tags": {
@@ -139,7 +145,6 @@
   "createOnlyProperties": [
     "/properties/ApiFormat",
     "/properties/AssistantId",
-    "/properties/ModelId",
     "/properties/Name",
     "/properties/Tags",
     "/properties/TemplateType",

@@ -77,8 +77,24 @@
     "AnalysisMethod": {
       "type": "string",
       "enum": [
-        "DIRECT_QUERY"
+        "DIRECT_QUERY",
+        "DIRECT_JOB",
+        "MULTIPLE"
       ]
+    },
+    "SelectedAnalysisMethod": {
+      "type": "string",
+      "enum": [
+        "DIRECT_QUERY",
+        "DIRECT_JOB"
+      ]
+    },
+    "SelectedAnalysisMethods": {
+      "type": "array",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/SelectedAnalysisMethod"
+      }
     },
     "JoinRequiredOption": {
       "type": "string",
@@ -219,7 +235,7 @@
       "type": "string",
       "minLength": 0,
       "maxLength": 200,
-      "pattern": "(ANY_QUERY|arn:[\\w]{3}:cleanrooms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:membership/[\\d\\w-]+/analysistemplate/[\\d\\w-]+)"
+      "pattern": "(ANY_QUERY|ANY_JOB|arn:[\\w]{3}:cleanrooms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:membership/[\\d\\w-]+/analysistemplate/[\\d\\w-]+)"
     },
     "AllowedAnalyses": {
       "type": "array",
@@ -376,6 +392,43 @@
         "CUSTOM"
       ]
     },
+    "CommercialRegion": {
+      "type": "string",
+      "enum": [
+        "us-west-1",
+        "us-west-2",
+        "us-east-1",
+        "us-east-2",
+        "af-south-1",
+        "ap-east-1",
+        "ap-south-2",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-southeast-5",
+        "ap-southeast-4",
+        "ap-southeast-7",
+        "ap-south-1",
+        "ap-northeast-3",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ca-central-1",
+        "ca-west-1",
+        "eu-south-1",
+        "eu-west-3",
+        "eu-south-2",
+        "eu-central-2",
+        "eu-central-1",
+        "eu-north-1",
+        "eu-west-1",
+        "eu-west-2",
+        "me-south-1",
+        "me-central-1",
+        "il-central-1",
+        "sa-east-1",
+        "mx-central-1",
+        "ap-east-2"
+      ]
+    },
     "GlueTableReference": {
       "type": "object",
       "properties": {
@@ -388,6 +441,9 @@
           "type": "string",
           "maxLength": 128,
           "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$"
+        },
+        "Region": {
+          "$ref": "#/definitions/CommercialRegion"
         }
       },
       "required": [
@@ -498,6 +554,9 @@
         "TableName": {
           "type": "string",
           "maxLength": 128
+        },
+        "Region": {
+          "$ref": "#/definitions/CommercialRegion"
         }
       },
       "required": [
@@ -615,6 +674,9 @@
     "AnalysisMethod": {
       "$ref": "#/definitions/AnalysisMethod"
     },
+    "SelectedAnalysisMethods": {
+      "$ref": "#/definitions/SelectedAnalysisMethods"
+    },
     "ConfiguredTableIdentifier": {
       "type": "string",
       "maxLength": 36,
@@ -654,11 +716,6 @@
   "readOnlyProperties": [
     "/properties/Arn",
     "/properties/ConfiguredTableIdentifier"
-  ],
-  "createOnlyProperties": [
-    "/properties/AllowedColumns",
-    "/properties/AnalysisMethod",
-    "/properties/TableReference"
   ],
   "primaryIdentifier": [
     "/properties/ConfiguredTableIdentifier"
@@ -708,6 +765,8 @@
     "update": {
       "permissions": [
         "cleanrooms:UpdateConfiguredTable",
+        "cleanrooms:UpdateConfiguredTableReference",
+        "cleanrooms:UpdateConfiguredTableAllowedColumns",
         "cleanrooms:GetConfiguredTable",
         "cleanrooms:CreateConfiguredTableAnalysisRule",
         "cleanrooms:UpdateConfiguredTableAnalysisRule",

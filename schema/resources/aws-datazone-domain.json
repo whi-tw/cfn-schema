@@ -31,6 +31,9 @@
         },
         "UserAssignment": {
           "$ref": "#/definitions/UserAssignment"
+        },
+        "IdcInstanceArn": {
+          "$ref": "#/definitions/IdcInstanceArn"
         }
       },
       "additionalProperties": false
@@ -65,9 +68,23 @@
         "AUTOMATIC",
         "MANUAL"
       ]
+    },
+    "IdcInstanceArn": {
+      "type": "string",
+      "description": "The ARN of the AWS Identity Center instance.",
+      "minLength": 10,
+      "maxLength": 1224,
+      "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}"
     }
   },
   "properties": {
+    "RootDomainUnitId": {
+      "type": "string",
+      "description": "The ID of the root domain in Amazon Datazone.",
+      "pattern": "^[a-z0-9_\\-]+$",
+      "minLength": 1,
+      "maxLength": 256
+    },
     "Arn": {
       "type": "string",
       "description": "The ARN of the Amazon DataZone domain.",
@@ -85,12 +102,12 @@
     "DomainExecutionRole": {
       "type": "string",
       "description": "The domain execution role that is created when an Amazon DataZone domain is created. The domain execution role is created in the AWS account that houses the Amazon DataZone domain.",
-      "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$"
+      "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$"
     },
     "ServiceRole": {
       "type": "string",
       "description": "The service role of the domain that is created.",
-      "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$"
+      "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$"
     },
     "DomainVersion": {
       "type": "string",
@@ -152,6 +169,7 @@
     "Name"
   ],
   "readOnlyProperties": [
+    "/properties/RootDomainUnitId",
     "/properties/Arn",
     "/properties/CreatedAt",
     "/properties/Id",
@@ -195,6 +213,13 @@
         "sso:PutApplicationAssignmentConfiguration",
         "sso:ListInstances",
         "sso:PutApplicationAccessScope",
+        "sso:PutApplicationGrant",
+        "sso:PutApplicationAuthenticationMethod",
+        "sso:PutApplicationAccessScope",
+        "sso:CreateApplication",
+        "sso:DeleteApplication",
+        "sso:CreateApplicationAssignment",
+        "sso:DeleteApplicationAssignment",
         "iam:PassRole"
       ]
     },
@@ -223,6 +248,8 @@
         "datazone:GetDomain",
         "sso:DeleteManagedApplicationInstance",
         "sso:PutApplicationAssignmentConfiguration",
+        "sso:DeleteApplication",
+        "sso:DeleteApplicationAssignment",
         "sso:ListInstances"
       ]
     },
@@ -234,6 +261,13 @@
   },
   "additionalProperties": false,
   "attributes": {
+    "RootDomainUnitId": {
+      "type": "string",
+      "description": "The ID of the root domain in Amazon Datazone.",
+      "pattern": "^[a-z0-9_\\-]+$",
+      "minLength": 1,
+      "maxLength": 256
+    },
     "Arn": {
       "type": "string",
       "description": "The ARN of the Amazon DataZone domain.",

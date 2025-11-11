@@ -100,6 +100,20 @@
       "description": "Amazon Resource Name (ARN) of the add-on",
       "type": "string"
     },
+    "NamespaceConfig": {
+      "description": "The custom namespace configuration to use with the add-on",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Namespace": {
+          "type": "string",
+          "description": "The custom namespace for creating the add-on"
+        }
+      },
+      "required": [
+        "Namespace"
+      ]
+    },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",
       "type": "array",
@@ -132,7 +146,8 @@
   ],
   "createOnlyProperties": [
     "/properties/ClusterName",
-    "/properties/AddonName"
+    "/properties/AddonName",
+    "/properties/NamespaceConfig"
   ],
   "readOnlyProperties": [
     "/properties/Arn"

@@ -54,6 +54,21 @@
       "type": "string",
       "minLength": 1
     },
+    "TargetRoleArn": {
+      "description": "The Target Role Arn of the pod identity association.",
+      "type": "string",
+      "minLength": 1
+    },
+    "ExternalId": {
+      "description": "The External Id of the pod identity association.",
+      "type": "string",
+      "minLength": 1
+    },
+    "DisableSessionTags": {
+      "description": "The Disable Session Tags of the pod identity association.",
+      "type": "boolean",
+      "minLength": 1
+    },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",
       "type": "array",
@@ -92,7 +107,8 @@
   ],
   "readOnlyProperties": [
     "/properties/AssociationArn",
-    "/properties/AssociationId"
+    "/properties/AssociationId",
+    "/properties/ExternalId"
   ],
   "replacementStrategy": "create_then_delete",
   "handlers": {
@@ -149,6 +165,11 @@
     },
     "AssociationId": {
       "description": "The ID of the pod identity association.",
+      "type": "string",
+      "minLength": 1
+    },
+    "ExternalId": {
+      "description": "The External Id of the pod identity association.",
       "type": "string",
       "minLength": 1
     }

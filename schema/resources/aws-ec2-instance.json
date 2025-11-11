@@ -54,23 +54,21 @@
     "/properties/KernelId",
     "/properties/PrivateDnsNameOptions",
     "/properties/RamdiskId",
-    "/properties/SecurityGroupIds",
     "/properties/Tenancy",
     "/properties/UserData",
-    "/properties/BlockDeviceMappings"
+    "/properties/BlockDeviceMappings",
+    "/properties/SecurityGroupIds"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
   "handlers": {
     "read": {
       "permissions": [
-        "ec2:DescribeElasticGpus",
         "ec2:DescribeNetworkInterfaces",
         "ec2:DescribeVolumes",
         "ec2:DescribeInstances",
         "ec2:DescribeInstanceAttribute",
         "ec2:DescribeInstanceCreditSpecifications",
         "ec2:DescribeLaunchTemplates",
-        "elastic-inference:DescribeAccelerators",
         "ssm:DescribeAssociation",
         "ssm:ListAssociations"
       ]
@@ -79,7 +77,6 @@
       "permissions": [
         "iam:PassRole",
         "ec2:ModifyPrivateDnsNameOptions",
-        "ec2:DescribeElasticGpus",
         "ec2:DescribeNetworkInterfaces",
         "ec2:DescribeVolumes",
         "ec2:RunInstances",
@@ -104,7 +101,6 @@
         "ec2:CreateTags",
         "ec2:ReplaceIamInstanceProfileAssociation",
         "ec2:StartInstances",
-        "elastic-inference:DescribeAccelerators",
         "ssm:CreateAssociation",
         "ssm:DescribeAssociation",
         "ssm:ListAssociations"
@@ -112,7 +108,6 @@
     },
     "update": {
       "permissions": [
-        "ec2:DescribeElasticGpus",
         "ec2:ModifyPrivateDnsNameOptions",
         "ec2:DescribeNetworkInterfaces",
         "ec2:AssociateIamInstanceProfile",
@@ -130,6 +125,7 @@
         "ec2:ModifyInstanceAttribute",
         "ec2:ModifyInstanceCreditSpecification",
         "ec2:ModifyInstanceMaintenanceOptions",
+        "ec2:ModifyInstanceMetadataOptions",
         "ec2:ModifyInstancePlacement",
         "ec2:MonitorInstances",
         "ec2:AttachVolume",
@@ -139,7 +135,6 @@
         "ec2:StartInstances",
         "ec2:StopInstances",
         "ec2:UnmonitorInstances",
-        "elastic-inference:DescribeAccelerators",
         "ssm:CreateAssociation",
         "ssm:DeleteAssociation",
         "ssm:DescribeAssociation",
@@ -155,14 +150,12 @@
       "permissions": [
         "ec2:DescribeInstances",
         "ec2:TerminateInstances",
-        "ec2:DescribeElasticGpus",
         "ec2:DescribeNetworkInterfaces",
         "ec2:DescribeVolumes",
         "ec2:DescribeInstances",
         "ec2:DescribeInstanceAttribute",
         "ec2:DescribeInstanceCreditSpecifications",
         "ec2:DescribeLaunchTemplates",
-        "elastic-inference:DescribeAccelerators",
         "ssm:DescribeAssociation",
         "ssm:ListAssociations"
       ]
@@ -212,6 +205,51 @@
         }
       }
     },
+    "MetadataOptions": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "HttpPutResponseHopLimit": {
+          "default": 1,
+          "description": "The number of network hops that the metadata token can travel. Maximum is 64.",
+          "maximum": 64,
+          "type": "integer",
+          "minimum": 1
+        },
+        "HttpProtocolIpv6": {
+          "description": "Enables or disables the IPv6 endpoint for the instance metadata service. To use this option, the instance must be a Nitro-based instance launched in a subnet that supports IPv6.",
+          "type": "string",
+          "enum": [
+            "disabled",
+            "enabled"
+          ]
+        },
+        "HttpTokens": {
+          "description": "Indicates whether IMDSv2 is required.",
+          "type": "string",
+          "enum": [
+            "optional",
+            "required"
+          ]
+        },
+        "InstanceMetadataTags": {
+          "description": "Indicates whether tags from the instance are propagated to the EBS volumes.",
+          "type": "string",
+          "enum": [
+            "disabled",
+            "enabled"
+          ]
+        },
+        "HttpEndpoint": {
+          "description": "Enables or disables the HTTP metadata endpoint on your instances. If you specify a value of disabled, you cannot access your instance metadata.",
+          "type": "string",
+          "enum": [
+            "disabled",
+            "enabled"
+          ]
+        }
+      }
+    },
     "LicenseSpecification": {
       "additionalProperties": false,
       "type": "object",
@@ -230,7 +268,7 @@
       "type": "object",
       "properties": {
         "Type": {
-          "description": "The type of Elastic Graphics accelerator.",
+          "description": "The type of Elastic Graphics accelerator. Amazon Elastic Graphics is no longer available.",
           "type": "string"
         }
       },
@@ -314,6 +352,9 @@
           "description": "Not currently supported by AWS CloudFormation.",
           "type": "boolean"
         },
+        "EnaSrdSpecification": {
+          "$ref": "#/definitions/EnaSrdSpecification"
+        },
         "Ipv6AddressCount": {
           "description": "A number of IPv6 addresses to assign to the network interface.",
           "type": "integer"
@@ -354,11 +395,11 @@
       "type": "object",
       "properties": {
         "Type": {
-          "description": "The type of elastic inference accelerator.",
+          "description": "The type of elastic inference accelerator. Amazon Elastic Inference is no longer available.",
           "type": "string"
         },
         "Count": {
-          "description": "The number of elastic inference accelerators to attach to the instance.",
+          "description": "The number of elastic inference accelerators to attach to the instance. Amazon Elastic Inference is no longer available.",
           "type": "integer",
           "minimum": 0
         }
@@ -429,6 +470,31 @@
         "PrivateIpAddress",
         "Primary"
       ]
+    },
+    "EnaSrdSpecification": {
+      "description": "Specifies the ENA Express settings for the network interface that's attached to the instance.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "EnaSrdEnabled": {
+          "description": "Specifies whether ENA Express is enabled for the network interface when you launch an instance.",
+          "type": "boolean"
+        },
+        "EnaSrdUdpSpecification": {
+          "$ref": "#/definitions/EnaSrdUdpSpecification"
+        }
+      }
+    },
+    "EnaSrdUdpSpecification": {
+      "description": "Contains ENA Express settings for UDP network traffic for the network interface that's attached to the instance.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "EnaSrdUdpEnabled": {
+          "description": "Indicates whether UDP traffic uses ENA Express for your instance.",
+          "type": "boolean"
+        }
+      }
     },
     "Volume": {
       "additionalProperties": false,
@@ -539,6 +605,150 @@
     }
   },
   "properties": {
+    "PrivateDnsName": {
+      "description": "The private DNS name of the specified instance. For example: ip-10-24-34-0.ec2.internal.",
+      "type": "string"
+    },
+    "Volumes": {
+      "uniqueItems": false,
+      "description": "The volumes to attach to the instance.",
+      "insertionOrder": false,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Volume"
+      }
+    },
+    "PrivateIp": {
+      "description": "The private IP address of the specified instance. For example: 10.24.34.0.",
+      "type": "string"
+    },
+    "EnclaveOptions": {
+      "description": "Indicates whether the instance is enabled for AWS Nitro Enclaves.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Enabled": {
+          "description": "If this parameter is set to true, the instance is enabled for AWS Nitro Enclaves; otherwise, it is not enabled for AWS Nitro Enclaves.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ImageId": {
+      "description": "The ID of the AMI. An AMI ID is required to launch an instance and must be specified here or in a launch template.",
+      "type": "string"
+    },
+    "Tags": {
+      "uniqueItems": false,
+      "description": "The tags to add to the instance.",
+      "insertionOrder": false,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Tag"
+      }
+    },
+    "AdditionalInfo": {
+      "description": "This property is reserved for internal use. If you use it, the stack fails with this error: Bad property set: [Testing this property] (Service: AmazonEC2; Status Code: 400; Error Code: InvalidParameterCombination; Request ID: 0XXXXXX-49c7-4b40-8bcc-76885dcXXXXX).",
+      "type": "string"
+    },
+    "HibernationOptions": {
+      "description": "Indicates whether an instance is enabled for hibernation.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Configured": {
+          "default": false,
+          "description": "If you set this parameter to true, your instance is enabled for hibernation.",
+          "type": "boolean"
+        }
+      }
+    },
+    "LicenseSpecifications": {
+      "uniqueItems": false,
+      "description": "The license configurations.",
+      "insertionOrder": false,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LicenseSpecification"
+      }
+    },
+    "MetadataOptions": {
+      "description": "The metadata options for the instance",
+      "type": "object",
+      "$ref": "#/definitions/MetadataOptions"
+    },
+    "InstanceId": {
+      "description": "The EC2 Instance ID.",
+      "type": "string"
+    },
+    "CpuOptions": {
+      "description": "The CPU options for the instance.",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ThreadsPerCore": {
+          "type": "integer"
+        },
+        "CoreCount": {
+          "type": "integer"
+        }
+      }
+    },
+    "AvailabilityZone": {
+      "description": "The Availability Zone of the instance.",
+      "type": "string"
+    },
+    "PrivateDnsNameOptions": {
+      "description": "The options for the instance hostname.",
+      "type": "object",
+      "$ref": "#/definitions/PrivateDnsNameOptions"
+    },
+    "HostId": {
+      "description": "If you specify host for the Affinity property, the ID of a dedicated host that the instance is associated with. If you don't specify an ID, Amazon EC2 launches the instance onto any available, compatible dedicated host in your account.",
+      "type": "string"
+    },
+    "PublicDnsName": {
+      "description": "The public DNS name of the specified instance. For example: ec2-107-20-50-45.compute-1.amazonaws.com.",
+      "type": "string"
+    },
+    "SecurityGroupIds": {
+      "uniqueItems": false,
+      "description": "The IDs of the security groups.",
+      "insertionOrder": false,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "PlacementGroupName": {
+      "description": "The name of an existing placement group that you want to launch the instance into (cluster | partition | spread).",
+      "type": "string"
+    },
+    "SsmAssociations": {
+      "uniqueItems": false,
+      "description": "The SSM document and parameter values in AWS Systems Manager to associate with this instance.",
+      "insertionOrder": false,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SsmAssociation"
+      }
+    },
+    "VpcId": {
+      "description": "The ID of the VPC that the instance is running in.",
+      "type": "string"
+    },
+    "State": {
+      "description": "The current state of the instance.",
+      "type": "object",
+      "$ref": "#/definitions/State"
+    },
+    "Affinity": {
+      "description": "Indicates whether the instance is associated with a dedicated host. If you want the instance to always restart on the same host on which it was launched, specify host. If you want the instance to restart on any available host, but try to launch onto the last host it ran on (on a best-effort basis), specify default.",
+      "type": "string",
+      "enum": [
+        "default",
+        "host"
+      ]
+    },
     "Tenancy": {
       "description": "The tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware.",
       "type": "string"
@@ -551,10 +761,6 @@
       "items": {
         "type": "string"
       }
-    },
-    "PrivateDnsName": {
-      "description": "The private DNS name of the specified instance. For example: ip-10-24-34-0.ec2.internal.",
-      "type": "string"
     },
     "PrivateIpAddress": {
       "description": "[EC2-VPC] The primary IPv4 address. You must specify a value from the IPv4 address range of the subnet.",
@@ -604,7 +810,7 @@
     },
     "ElasticGpuSpecifications": {
       "uniqueItems": false,
-      "description": "An elastic GPU to associate with the instance.",
+      "description": "An elastic GPU to associate with the instance. Amazon Elastic Graphics is no longer available.",
       "insertionOrder": false,
       "type": "array",
       "items": {
@@ -613,25 +819,12 @@
     },
     "ElasticInferenceAccelerators": {
       "uniqueItems": false,
-      "description": "An elastic inference accelerator to associate with the instance.",
+      "description": "An elastic inference accelerator to associate with the instance. Amazon Elastic Inference is no longer available.",
       "insertionOrder": false,
       "type": "array",
       "items": {
         "$ref": "#/definitions/ElasticInferenceAccelerator"
       }
-    },
-    "Volumes": {
-      "uniqueItems": false,
-      "description": "The volumes to attach to the instance.",
-      "insertionOrder": false,
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Volume"
-      }
-    },
-    "PrivateIp": {
-      "description": "The private IP address of the specified instance. For example: 10.24.34.0.",
-      "type": "string"
     },
     "Ipv6AddressCount": {
       "description": "[EC2-VPC] The number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet.",
@@ -642,17 +835,6 @@
       "type": "object",
       "$ref": "#/definitions/LaunchTemplateSpecification"
     },
-    "EnclaveOptions": {
-      "description": "Indicates whether the instance is enabled for AWS Nitro Enclaves.",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "Enabled": {
-          "description": "If this parameter is set to true, the instance is enabled for AWS Nitro Enclaves; otherwise, it is not enabled for AWS Nitro Enclaves.",
-          "type": "boolean"
-        }
-      }
-    },
     "NetworkInterfaces": {
       "uniqueItems": false,
       "description": "The network interfaces to associate with the instance.",
@@ -662,10 +844,6 @@
         "$ref": "#/definitions/NetworkInterface"
       }
     },
-    "ImageId": {
-      "description": "The ID of the AMI. An AMI ID is required to launch an instance and must be specified here or in a launch template.",
-      "type": "string"
-    },
     "InstanceType": {
       "description": "The instance type.",
       "type": "string"
@@ -673,44 +851,6 @@
     "Monitoring": {
       "description": "Specifies whether detailed monitoring is enabled for the instance.",
       "type": "boolean"
-    },
-    "Tags": {
-      "uniqueItems": false,
-      "description": "The tags to add to the instance.",
-      "insertionOrder": false,
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      }
-    },
-    "AdditionalInfo": {
-      "description": "This property is reserved for internal use. If you use it, the stack fails with this error: Bad property set: [Testing this property] (Service: AmazonEC2; Status Code: 400; Error Code: InvalidParameterCombination; Request ID: 0XXXXXX-49c7-4b40-8bcc-76885dcXXXXX).",
-      "type": "string"
-    },
-    "HibernationOptions": {
-      "description": "Indicates whether an instance is enabled for hibernation.",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "Configured": {
-          "default": false,
-          "description": "If you set this parameter to true, your instance is enabled for hibernation.",
-          "type": "boolean"
-        }
-      }
-    },
-    "LicenseSpecifications": {
-      "uniqueItems": false,
-      "description": "The license configurations.",
-      "insertionOrder": false,
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/LicenseSpecification"
-      }
-    },
-    "InstanceId": {
-      "description": "The EC2 Instance ID.",
-      "type": "string"
     },
     "PublicIp": {
       "description": "The public IP address of the specified instance. For example: 192.0.2.0.",
@@ -720,48 +860,9 @@
       "description": "Indicates whether an instance stops or terminates when you initiate shutdown from the instance (using the operating system command for system shutdown).",
       "type": "string"
     },
-    "CpuOptions": {
-      "description": "The CPU options for the instance.",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "ThreadsPerCore": {
-          "type": "integer"
-        },
-        "CoreCount": {
-          "type": "integer"
-        }
-      }
-    },
-    "AvailabilityZone": {
-      "description": "The Availability Zone of the instance.",
-      "type": "string"
-    },
-    "PrivateDnsNameOptions": {
-      "description": "The options for the instance hostname.",
-      "type": "object",
-      "$ref": "#/definitions/PrivateDnsNameOptions"
-    },
-    "HostId": {
-      "description": "If you specify host for the Affinity property, the ID of a dedicated host that the instance is associated with. If you don't specify an ID, Amazon EC2 launches the instance onto any available, compatible dedicated host in your account.",
-      "type": "string"
-    },
     "HostResourceGroupArn": {
       "description": "The ARN of the host resource group in which to launch the instances. If you specify a host resource group ARN, omit the Tenancy parameter or set it to host.",
       "type": "string"
-    },
-    "PublicDnsName": {
-      "description": "The public DNS name of the specified instance. For example: ec2-107-20-50-45.compute-1.amazonaws.com.",
-      "type": "string"
-    },
-    "SecurityGroupIds": {
-      "uniqueItems": false,
-      "description": "The IDs of the security groups.",
-      "insertionOrder": false,
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     },
     "DisableApiTermination": {
       "description": "If you set this parameter to true, you can't terminate the instance using the Amazon EC2 console, CLI, or API; otherwise, you can.",
@@ -778,36 +879,6 @@
     "SourceDestCheck": {
       "description": "Specifies whether to enable an instance launched in a VPC to perform NAT.",
       "type": "boolean"
-    },
-    "PlacementGroupName": {
-      "description": "The name of an existing placement group that you want to launch the instance into (cluster | partition | spread).",
-      "type": "string"
-    },
-    "SsmAssociations": {
-      "uniqueItems": false,
-      "description": "The SSM document and parameter values in AWS Systems Manager to associate with this instance.",
-      "insertionOrder": false,
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/SsmAssociation"
-      }
-    },
-    "VpcId": {
-      "description": "The ID of the VPC that the instance is running in.",
-      "type": "string"
-    },
-    "State": {
-      "description": "The current state of the instance.",
-      "type": "object",
-      "$ref": "#/definitions/State"
-    },
-    "Affinity": {
-      "description": "Indicates whether the instance is associated with a dedicated host. If you want the instance to always restart on the same host on which it was launched, specify host. If you want the instance to restart on any available host, but try to launch onto the last host it ran on (on a best-effort basis), specify default.",
-      "type": "string",
-      "enum": [
-        "default",
-        "host"
-      ]
     },
     "CreditSpecification": {
       "description": "The credit option for CPU usage of the burstable performance instance. Valid values are standard and unlimited.",
@@ -833,10 +904,6 @@
       "description": "The EC2 Instance ID.",
       "type": "string"
     },
-    "PublicIp": {
-      "description": "The public IP address of the specified instance. For example: 192.0.2.0.",
-      "type": "string"
-    },
     "PublicDnsName": {
       "description": "The public DNS name of the specified instance. For example: ec2-107-20-50-45.compute-1.amazonaws.com.",
       "type": "string"
@@ -849,6 +916,10 @@
       "description": "The current state of the instance.",
       "type": "object",
       "$ref": "#/definitions/State"
+    },
+    "PublicIp": {
+      "description": "The public IP address of the specified instance. For example: 192.0.2.0.",
+      "type": "string"
     }
   }
 }

@@ -51,6 +51,10 @@
         "DESK_PHONE"
       ]
     },
+    "PersistentConnection": {
+      "description": "The Persistent Connection setting.",
+      "type": "boolean"
+    },
     "UserIdentityInfo": {
       "description": "Contains information about the identity of a user.",
       "type": "object",
@@ -89,6 +93,9 @@
         },
         "PhoneType": {
           "$ref": "#/definitions/PhoneType"
+        },
+        "PersistentConnection": {
+          "$ref": "#/definitions/PersistentConnection"
         }
       },
       "required": [
@@ -305,7 +312,11 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "connect:TagResource",
+      "connect:UntagResource"
+    ]
   },
   "attributes": {
     "UserArn": {

@@ -73,6 +73,9 @@
         "StorageProfileId": {
           "type": "string",
           "pattern": "^sp-[0-9a-f]{32}$"
+        },
+        "TagPropagationMode": {
+          "$ref": "#/definitions/TagPropagationMode"
         }
       },
       "required": [
@@ -209,7 +212,8 @@
       "type": "string",
       "enum": [
         "on-demand",
-        "spot"
+        "spot",
+        "wait-and-save"
       ]
     },
     "FleetAmountCapability": {
@@ -320,8 +324,29 @@
         "CREATE_IN_PROGRESS",
         "UPDATE_IN_PROGRESS",
         "CREATE_FAILED",
-        "UPDATE_FAILED"
+        "UPDATE_FAILED",
+        "SUSPENDED"
       ]
+    },
+    "HostConfiguration": {
+      "type": "object",
+      "properties": {
+        "ScriptBody": {
+          "type": "string",
+          "maxLength": 15000,
+          "minLength": 0
+        },
+        "ScriptTimeoutSeconds": {
+          "type": "integer",
+          "default": 300,
+          "maximum": 3600,
+          "minimum": 300
+        }
+      },
+      "required": [
+        "ScriptBody"
+      ],
+      "additionalProperties": false
     },
     "MemoryMiBRange": {
       "type": "object",
@@ -350,6 +375,13 @@
         },
         "InstanceMarketOptions": {
           "$ref": "#/definitions/ServiceManagedEc2InstanceMarketOptions"
+        },
+        "VpcConfiguration": {
+          "$ref": "#/definitions/VpcConfiguration"
+        },
+        "StorageProfileId": {
+          "type": "string",
+          "pattern": "^sp-[0-9a-f]{32}$"
         }
       },
       "required": [
@@ -441,6 +473,13 @@
         "WINDOWS"
       ]
     },
+    "TagPropagationMode": {
+      "type": "string",
+      "enum": [
+        "NO_PROPAGATION",
+        "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH"
+      ]
+    },
     "Tag": {
       "description": "A key-value pair to associate with a resource.",
       "type": "object",
@@ -482,6 +521,20 @@
         "Min"
       ],
       "additionalProperties": false
+    },
+    "VpcConfiguration": {
+      "type": "object",
+      "properties": {
+        "ResourceConfigurationArns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -510,6 +563,9 @@
       "type": "string",
       "pattern": "^fleet-[0-9a-f]{32}$"
     },
+    "HostConfiguration": {
+      "$ref": "#/definitions/HostConfiguration"
+    },
     "MaxWorkerCount": {
       "type": "integer",
       "maximum": 2147483647,
@@ -527,6 +583,9 @@
     },
     "Status": {
       "$ref": "#/definitions/FleetStatus"
+    },
+    "StatusMessage": {
+      "type": "string"
     },
     "WorkerCount": {
       "type": "integer"
@@ -557,6 +616,7 @@
     "/properties/Capabilities",
     "/properties/FleetId",
     "/properties/Status",
+    "/properties/StatusMessage",
     "/properties/WorkerCount",
     "/properties/Arn"
   ],
@@ -587,7 +647,13 @@
         "identitystore:ListGroupMembershipsForMember",
         "logs:CreateLogGroup",
         "deadline:TagResource",
-        "deadline:ListTagsForResource"
+        "deadline:ListTagsForResource",
+        "vpc-lattice:GetResourceGateway",
+        "vpc-lattice:GetResourceConfiguration",
+        "ec2:CreateVpcEndpoint",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
       ]
     },
     "read": {
@@ -605,7 +671,13 @@
         "identitystore:ListGroupMembershipsForMember",
         "deadline:TagResource",
         "deadline:UntagResource",
-        "deadline:ListTagsForResource"
+        "deadline:ListTagsForResource",
+        "vpc-lattice:GetResourceGateway",
+        "vpc-lattice:GetResourceConfiguration",
+        "ec2:CreateVpcEndpoint",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
       ]
     },
     "delete": {
@@ -645,6 +717,9 @@
     },
     "Status": {
       "$ref": "#/definitions/FleetStatus"
+    },
+    "StatusMessage": {
+      "type": "string"
     },
     "WorkerCount": {
       "type": "integer"

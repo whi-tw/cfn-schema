@@ -49,6 +49,10 @@
           "$ref": "#/definitions/SourceData"
         }
       },
+      "required": [
+        "SourceType",
+        "SourceData"
+      ],
       "additionalProperties": false
     },
     "SourceData": {
@@ -105,8 +109,7 @@
       "type": "string",
       "enum": [
         "AWS_ACM_PCA",
-        "CERTIFICATE_BUNDLE",
-        "SELF_SIGNED_REPOSITORY"
+        "CERTIFICATE_BUNDLE"
       ]
     }
   },

@@ -10,6 +10,73 @@
         "SPARK"
       ]
     },
+    "AutoApprovedChangeType": {
+      "type": "string",
+      "enum": [
+        "ADD_MEMBER"
+      ]
+    },
+    "AutoApprovedChangeTypeList": {
+      "type": "array",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AutoApprovedChangeType"
+      },
+      "uniqueItems": true
+    },
+    "CollaborationJobLogStatus": {
+      "type": "string",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "SupportedS3Region": {
+      "type": "string",
+      "enum": [
+        "us-west-1",
+        "us-west-2",
+        "us-east-1",
+        "us-east-2",
+        "af-south-1",
+        "ap-east-1",
+        "ap-east-2",
+        "ap-south-2",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-southeast-3",
+        "ap-southeast-5",
+        "ap-southeast-4",
+        "ap-southeast-7",
+        "ap-south-1",
+        "ap-northeast-3",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ca-central-1",
+        "ca-west-1",
+        "eu-south-1",
+        "eu-west-3",
+        "eu-south-2",
+        "eu-central-2",
+        "eu-central-1",
+        "eu-north-1",
+        "eu-west-1",
+        "eu-west-2",
+        "me-south-1",
+        "me-central-1",
+        "il-central-1",
+        "sa-east-1",
+        "mx-central-1"
+      ]
+    },
+    "AllowedResultRegions": {
+      "type": "array",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/SupportedS3Region"
+      },
+      "uniqueItems": true
+    },
     "CollaborationQueryLogStatus": {
       "type": "string",
       "enum": [
@@ -45,6 +112,7 @@
       "type": "string",
       "enum": [
         "CAN_QUERY",
+        "CAN_RUN_JOB",
         "CAN_RECEIVE_RESULTS"
       ]
     },
@@ -107,8 +175,7 @@
       },
       "required": [
         "AccountId",
-        "DisplayName",
-        "MemberAbilities"
+        "DisplayName"
       ],
       "additionalProperties": false
     },
@@ -151,6 +218,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "JobCompute": {
+          "$ref": "#/definitions/JobComputePaymentConfig"
+        },
         "QueryCompute": {
           "$ref": "#/definitions/QueryComputePaymentConfig"
         },
@@ -160,6 +230,18 @@
       },
       "required": [
         "QueryCompute"
+      ]
+    },
+    "JobComputePaymentConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "IsResponsible": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "IsResponsible"
       ]
     },
     "QueryComputePaymentConfig": {
@@ -264,6 +346,9 @@
       "minLength": 1,
       "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$"
     },
+    "JobLogStatus": {
+      "$ref": "#/definitions/CollaborationJobLogStatus"
+    },
     "QueryLogStatus": {
       "$ref": "#/definitions/CollaborationQueryLogStatus"
     },
@@ -272,12 +357,16 @@
     },
     "CreatorPaymentConfiguration": {
       "$ref": "#/definitions/PaymentConfiguration"
+    },
+    "AutoApprovedChangeTypes": {
+      "$ref": "#/definitions/AutoApprovedChangeTypeList"
+    },
+    "AllowedResultRegions": {
+      "$ref": "#/definitions/AllowedResultRegions"
     }
   },
   "required": [
     "CreatorDisplayName",
-    "CreatorMemberAbilities",
-    "Members",
     "Name",
     "Description",
     "QueryLogStatus"
@@ -291,10 +380,12 @@
     "/properties/CreatorMemberAbilities",
     "/properties/CreatorMLMemberAbilities",
     "/properties/DataEncryptionMetadata",
+    "/properties/JobLogStatus",
     "/properties/QueryLogStatus",
     "/properties/Members",
     "/properties/CreatorPaymentConfiguration",
-    "/properties/AnalyticsEngine"
+    "/properties/AutoApprovedChangeTypes",
+    "/properties/AllowedResultRegions"
   ],
   "primaryIdentifier": [
     "/properties/CollaborationIdentifier"

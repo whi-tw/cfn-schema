@@ -105,6 +105,39 @@
     "EmptyOnDelete": {
       "type": "boolean",
       "description": "If true, deleting the repository force deletes the contents of the repository. Without a force delete, you can only delete empty repositories."
+    },
+    "ImageTagMutabilityExclusionFilter": {
+      "type": "object",
+      "description": "A filter that specifies which image tags should be excluded from the repository's image tag mutability setting.",
+      "properties": {
+        "ImageTagMutabilityExclusionFilterType": {
+          "$ref": "#/definitions/ImageTagMutabilityExclusionFilterType",
+          "description": ""
+        },
+        "ImageTagMutabilityExclusionFilterValue": {
+          "$ref": "#/definitions/ImageTagMutabilityExclusionFilterValue",
+          "description": ""
+        }
+      },
+      "required": [
+        "ImageTagMutabilityExclusionFilterType",
+        "ImageTagMutabilityExclusionFilterValue"
+      ],
+      "additionalProperties": false
+    },
+    "ImageTagMutabilityExclusionFilterType": {
+      "type": "string",
+      "description": "Specifies the type of filter to use for excluding image tags from the repository's mutability setting.",
+      "enum": [
+        "WILDCARD"
+      ]
+    },
+    "ImageTagMutabilityExclusionFilterValue": {
+      "type": "string",
+      "description": "The value to use when filtering image tags.",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[0-9a-zA-Z._*-]{1,128}"
     }
   },
   "properties": {
@@ -153,12 +186,24 @@
       "description": "The tag mutability setting for the repository. If this parameter is omitted, the default setting of ``MUTABLE`` will be used which will allow image tags to be overwritten. If ``IMMUTABLE`` is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.",
       "enum": [
         "MUTABLE",
-        "IMMUTABLE"
+        "IMMUTABLE",
+        "MUTABLE_WITH_EXCLUSION",
+        "IMMUTABLE_WITH_EXCLUSION"
       ]
+    },
+    "ImageTagMutabilityExclusionFilters": {
+      "type": "array",
+      "description": "A list of filters that specify which image tags are excluded from the repository's image tag mutability setting.",
+      "minItems": 1,
+      "maxItems": 5,
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/ImageTagMutabilityExclusionFilter"
+      }
     },
     "ImageScanningConfiguration": {
       "$ref": "#/definitions/ImageScanningConfiguration",
-      "description": "The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository."
+      "description": "The ``imageScanningConfiguration`` parameter is being deprecated, in favor of specifying the image scanning configuration at the registry level. For more information, see ``PutRegistryScanningConfiguration``.\n  The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository."
     },
     "EncryptionConfiguration": {
       "$ref": "#/definitions/EncryptionConfiguration",

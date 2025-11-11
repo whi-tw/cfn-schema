@@ -200,11 +200,21 @@
         "HTTP_HOST"
       ]
     },
+    "SummaryRuleOption": {
+      "type": "string",
+      "enum": [
+        "SID",
+        "MSG",
+        "METADATA"
+      ]
+    },
     "GeneratedRulesType": {
       "type": "string",
       "enum": [
         "ALLOWLIST",
-        "DENYLIST"
+        "DENYLIST",
+        "ALERTLIST",
+        "REJECTLIST"
       ]
     },
     "StatefulRule": {
@@ -639,6 +649,20 @@
     "Capacity": {
       "type": "integer"
     },
+    "SummaryConfiguration": {
+      "type": "object",
+      "properties": {
+        "RuleOptions": {
+          "type": "array",
+          "insertionOrder": true,
+          "uniqueItems": false,
+          "items": {
+            "$ref": "#/definitions/SummaryRuleOption"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "Description": {
       "type": "string",
       "minLength": 1,
@@ -691,7 +715,8 @@
         "network-firewall:TagResource",
         "network-firewall:ListRuleGroups",
         "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries"
+        "ec2:GetManagedPrefixListEntries",
+        "ec2:DescribeManagedPrefixLists"
       ]
     },
     "read": {
@@ -707,7 +732,8 @@
         "network-firewall:TagResource",
         "network-firewall:UntagResource",
         "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries"
+        "ec2:GetManagedPrefixListEntries",
+        "ec2:DescribeManagedPrefixLists"
       ]
     },
     "delete": {

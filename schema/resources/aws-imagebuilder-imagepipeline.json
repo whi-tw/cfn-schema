@@ -67,6 +67,10 @@
       "description": "The execution role name/ARN for the image build, if provided",
       "type": "string"
     },
+    "LoggingConfiguration": {
+      "description": "The logging configuration settings for the image pipeline.",
+      "$ref": "#/definitions/PipelineLoggingConfiguration"
+    },
     "Tags": {
       "description": "The tags of this image pipeline.",
       "type": "object",
@@ -76,6 +80,10 @@
           "type": "string"
         }
       }
+    },
+    "DeploymentId": {
+      "description": "The deployment ID of the pipeline, used for resource create/update triggers.",
+      "type": "string"
     }
   },
   "definitions": {
@@ -146,8 +154,27 @@
             "EXPRESSION_MATCH_ONLY",
             "EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE"
           ]
+        },
+        "AutoDisablePolicy": {
+          "description": "The auto-disable policy for the image pipeline.",
+          "$ref": "#/definitions/AutoDisablePolicy"
         }
       }
+    },
+    "AutoDisablePolicy": {
+      "description": "The auto-disable policy configuration for the image pipeline.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FailureCount": {
+          "description": "The number of consecutive failures after which the pipeline should be automatically disabled.",
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "FailureCount"
+      ]
     },
     "WorkflowConfiguration": {
       "description": "The workflow configuration of the image",
@@ -200,6 +227,21 @@
     "WorkflowParameterValue": {
       "description": "The value associated with the workflow parameter",
       "type": "string"
+    },
+    "PipelineLoggingConfiguration": {
+      "description": "The logging configuration settings for the image pipeline.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ImageLogGroupName": {
+          "description": "The name of the log group for image build logs.",
+          "type": "string"
+        },
+        "PipelineLogGroupName": {
+          "description": "The name of the log group for pipeline execution logs.",
+          "type": "string"
+        }
+      }
     }
   },
   "additionalProperties": false,
@@ -223,7 +265,8 @@
     "/properties/Arn"
   ],
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/DeploymentId"
   ],
   "createOnlyProperties": [
     "/properties/Name"
@@ -233,7 +276,11 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "imagebuilder:TagResource",
+      "imagebuilder:UntagResource"
+    ]
   },
   "handlers": {
     "create": {
@@ -257,7 +304,9 @@
         "iam:PassRole",
         "imagebuilder:GetImagePipeline",
         "imagebuilder:UpdateImagePipeline",
-        "imagebuilder:GetWorkflow"
+        "imagebuilder:GetWorkflow",
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
       ]
     },
     "read": {
@@ -267,7 +316,7 @@
     },
     "delete": {
       "permissions": [
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:GetImagePipeline",
         "imagebuilder:DeleteImagePipeline"
       ]
@@ -281,6 +330,10 @@
   "attributes": {
     "Arn": {
       "description": "The Amazon Resource Name (ARN) of the image pipeline.",
+      "type": "string"
+    },
+    "DeploymentId": {
+      "description": "The deployment ID of the pipeline, used for resource create/update triggers.",
       "type": "string"
     }
   }

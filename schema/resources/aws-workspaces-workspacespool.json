@@ -25,6 +25,13 @@
         "ENABLED"
       ]
     },
+    "RunningMode": {
+      "type": "string",
+      "enum": [
+        "ALWAYS_ON",
+        "AUTO_STOP"
+      ]
+    },
     "Capacity": {
       "type": "object",
       "properties": {
@@ -119,6 +126,9 @@
     "TimeoutSettings": {
       "$ref": "#/definitions/TimeoutSettings"
     },
+    "RunningMode": {
+      "$ref": "#/definitions/RunningMode"
+    },
     "Tags": {
       "type": "array",
       "uniqueItems": false,
@@ -139,8 +149,13 @@
     "taggable": true,
     "tagOnCreate": true,
     "tagUpdatable": false,
-    "cloudFormationSystemTags": false,
-    "tagProperty": "/properties/Tags"
+    "cloudFormationSystemTags": true,
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "workspaces:CreateTags",
+      "workspaces:DescribeTags",
+      "workspaces:DeleteTags"
+    ]
   },
   "primaryIdentifier": [
     "/properties/PoolId"
@@ -162,28 +177,36 @@
     "create": {
       "permissions": [
         "workspaces:CreateWorkspacesPool",
-        "workspaces:DescribeWorkspacesPools"
+        "workspaces:DescribeWorkspacesPools",
+        "workspaces:CreateTags"
       ]
     },
     "read": {
       "permissions": [
-        "workspaces:DescribeWorkspacesPools"
+        "workspaces:DescribeWorkspacesPools",
+        "workspaces:DescribeTags"
       ]
     },
     "update": {
       "permissions": [
-        "workspaces:UpdateWorkspacesPool"
+        "workspaces:UpdateWorkspacesPool",
+        "workspaces:CreateTags",
+        "workspaces:DeleteTags",
+        "workspaces:DescribeWorkspacesPools",
+        "workspaces:DescribeTags"
       ]
     },
     "delete": {
       "permissions": [
         "workspaces:DescribeWorkspacesPools",
-        "workspaces:TerminateWorkspacesPool"
+        "workspaces:TerminateWorkspacesPool",
+        "workspaces:DeleteTags"
       ]
     },
     "list": {
       "permissions": [
-        "workspaces:DescribeWorkspacesPools"
+        "workspaces:DescribeWorkspacesPools",
+        "workspaces:DescribeTags"
       ]
     }
   },

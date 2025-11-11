@@ -256,6 +256,9 @@
         "QualityLevel": {
           "type": "string"
         },
+        "MinBitrate": {
+          "type": "integer"
+        },
         "MinIInterval": {
           "type": "integer"
         },
@@ -484,14 +487,37 @@
         "Scte35Type": {
           "type": "string"
         },
+        "TimedMetadataId3Frame": {
+          "type": "string"
+        },
+        "TimedMetadataPassthrough": {
+          "type": "string"
+        },
         "NielsenId3Behavior": {
           "type": "string"
         },
         "Scte35NameModifier": {
           "type": "string"
         },
+        "CaptionLanguageMappings": {
+          "type": "array",
+          "uniqueItems": false,
+          "items": {
+            "$ref": "#/definitions/CmafIngestCaptionLanguageMapping"
+          }
+        },
         "SegmentLengthUnits": {
           "type": "string"
+        },
+        "TimedMetadataId3Period": {
+          "type": "integer"
+        },
+        "AdditionalDestinations": {
+          "type": "array",
+          "uniqueItems": false,
+          "items": {
+            "$ref": "#/definitions/AdditionalDestinations"
+          }
         },
         "NielsenId3NameModifier": {
           "type": "string"
@@ -786,6 +812,15 @@
         }
       }
     },
+    "AdditionalDestinations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Destination": {
+          "$ref": "#/definitions/OutputLocationRef"
+        }
+      }
+    },
     "OutputDestination": {
       "type": "object",
       "additionalProperties": false,
@@ -797,11 +832,18 @@
             "$ref": "#/definitions/SrtOutputDestinationSettings"
           }
         },
-        "Id": {
-          "type": "string"
+        "LogicalInterfaceNames": {
+          "type": "array",
+          "uniqueItems": false,
+          "items": {
+            "type": "string"
+          }
         },
         "MultiplexSettings": {
           "$ref": "#/definitions/MultiplexProgramChannelDestinationSettings"
+        },
+        "Id": {
+          "type": "string"
         },
         "Settings": {
           "type": "array",
@@ -1419,6 +1461,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "MediapackageV2GroupSettings": {
+          "$ref": "#/definitions/MediaPackageV2GroupSettings"
+        },
         "Destination": {
           "$ref": "#/definitions/OutputLocationRef"
         }
@@ -2282,10 +2327,6 @@
       "type": "object",
       "additionalProperties": false
     },
-    "Rec709Settings": {
-      "type": "object",
-      "additionalProperties": false
-    },
     "ArchiveContainerSettings": {
       "type": "object",
       "additionalProperties": false,
@@ -2297,6 +2338,10 @@
           "$ref": "#/definitions/RawSettings"
         }
       }
+    },
+    "Rec709Settings": {
+      "type": "object",
+      "additionalProperties": false
     },
     "InputAttachment": {
       "type": "object",
@@ -2358,7 +2403,12 @@
     },
     "MediaPackageOutputSettings": {
       "type": "object",
-      "additionalProperties": false
+      "additionalProperties": false,
+      "properties": {
+        "MediaPackageV2DestinationSettings": {
+          "$ref": "#/definitions/MediaPackageV2DestinationSettings"
+        }
+      }
     },
     "Av1ColorSpaceSettings": {
       "type": "object",
@@ -2646,6 +2696,46 @@
         }
       }
     },
+    "MediaPackageV2GroupSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CaptionLanguageMappings": {
+          "type": "array",
+          "uniqueItems": false,
+          "items": {
+            "$ref": "#/definitions/CaptionLanguageMapping"
+          }
+        },
+        "Scte35Type": {
+          "type": "string"
+        },
+        "SegmentLengthUnits": {
+          "type": "string"
+        },
+        "TimedMetadataId3Frame": {
+          "type": "string"
+        },
+        "TimedMetadataId3Period": {
+          "type": "integer"
+        },
+        "TimedMetadataPassthrough": {
+          "type": "string"
+        },
+        "NielsenId3Behavior": {
+          "type": "string"
+        },
+        "KlvBehavior": {
+          "type": "string"
+        },
+        "Id3Behavior": {
+          "type": "string"
+        },
+        "SegmentLength": {
+          "type": "integer"
+        }
+      }
+    },
     "AudioSelector": {
       "type": "object",
       "additionalProperties": false,
@@ -2731,6 +2821,9 @@
         "MvTemporalPredictor": {
           "type": "string"
         },
+        "MinBitrate": {
+          "type": "integer"
+        },
         "MinIInterval": {
           "type": "integer"
         },
@@ -2806,6 +2899,9 @@
         "LookAheadRateControl": {
           "type": "string"
         },
+        "GopBReference": {
+          "type": "string"
+        },
         "Level": {
           "type": "string"
         },
@@ -2814,6 +2910,12 @@
         },
         "TreeblockSize": {
           "type": "string"
+        },
+        "SubgopLength": {
+          "type": "string"
+        },
+        "GopNumBFrames": {
+          "type": "integer"
         }
       }
     },
@@ -2909,6 +3011,9 @@
           "type": "integer"
         },
         "TeletextGridControl": {
+          "type": "string"
+        },
+        "SubtitleRows": {
           "type": "string"
         },
         "FontOpacity": {
@@ -3012,6 +3117,9 @@
           "type": "integer"
         },
         "TeletextGridControl": {
+          "type": "string"
+        },
+        "SubtitleRows": {
           "type": "string"
         },
         "FontOpacity": {
@@ -3192,10 +3300,19 @@
         "AfdSignaling": {
           "type": "string"
         },
+        "Bitrate": {
+          "type": "integer"
+        },
         "ParNumerator": {
           "type": "integer"
         },
+        "RateControlMode": {
+          "type": "string"
+        },
         "BufSize": {
+          "type": "integer"
+        },
+        "MinBitrate": {
           "type": "integer"
         },
         "MinIInterval": {
@@ -3324,13 +3441,19 @@
         "FontFamily": {
           "type": "string"
         },
+        "DefaultFontSize": {
+          "type": "integer"
+        },
+        "DefaultLineHeight": {
+          "type": "integer"
+        },
+        "FillLineGap": {
+          "type": "string"
+        },
         "StyleControl": {
           "type": "string"
         },
         "CopyrightHolder": {
-          "type": "string"
-        },
-        "FillLineGap": {
           "type": "string"
         }
       }
@@ -3374,6 +3497,24 @@
         }
       }
     },
+    "MediaPackageV2DestinationSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "HlsDefault": {
+          "type": "string"
+        },
+        "AudioRenditionSets": {
+          "type": "string"
+        },
+        "AudioGroupId": {
+          "type": "string"
+        },
+        "HlsAutoSelect": {
+          "type": "string"
+        }
+      }
+    },
     "MotionGraphicsConfiguration": {
       "type": "object",
       "additionalProperties": false,
@@ -3383,6 +3524,18 @@
         },
         "MotionGraphicsInsertion": {
           "type": "string"
+        }
+      }
+    },
+    "CmafIngestCaptionLanguageMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LanguageCode": {
+          "type": "string"
+        },
+        "CaptionChannel": {
+          "type": "integer"
         }
       }
     },
@@ -3554,8 +3707,7 @@
     }
   },
   "createOnlyProperties": [
-    "/properties/Vpc",
-    "/properties/AnywhereSettings"
+    "/properties/Vpc"
   ],
   "primaryIdentifier": [
     "/properties/Id"

@@ -35,7 +35,9 @@
   "primaryIdentifier": [
     "/properties/ResolverRuleAssociationId"
   ],
-  "taggable": false,
+  "tagging": {
+    "taggable": false
+  },
   "handlers": {
     "create": {
       "permissions": [
@@ -57,7 +59,8 @@
     },
     "list": {
       "permissions": [
-        "route53resolver:ListResolverRuleAssociations"
+        "route53resolver:ListResolverRuleAssociations",
+        "ec2:DescribeVpcs"
       ]
     }
   },

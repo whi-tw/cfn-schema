@@ -75,6 +75,13 @@
     "VpnConnectionArn": {
       "description": "The ARN of the site-to-site VPN attachment.",
       "type": "string"
+    },
+    "LastModificationErrors": {
+      "description": "Errors from the last modification of the attachment.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "definitions": {
@@ -174,7 +181,8 @@
     "/properties/OwnerAccountId",
     "/properties/EdgeLocation",
     "/properties/AttachmentPolicyRuleNumber",
-    "/properties/SegmentName"
+    "/properties/SegmentName",
+    "/properties/LastModificationErrors"
   ],
   "primaryIdentifier": [
     "/properties/AttachmentId"
@@ -197,7 +205,7 @@
         "ec2:DescribeRegions",
         "networkmanager:TagResource"
       ],
-      "timeoutInMinutes": 40
+      "timeoutInMinutes": 120
     },
     "read": {
       "permissions": [
@@ -271,6 +279,13 @@
     "UpdatedAt": {
       "description": "Last update time of the attachment.",
       "type": "string"
+    },
+    "LastModificationErrors": {
+      "description": "Errors from the last modification of the attachment.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

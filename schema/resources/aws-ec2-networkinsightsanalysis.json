@@ -1,4 +1,41 @@
 {
+  "tagging": {
+    "permissions": [
+      "ec2:CreateTags",
+      "ec2:DeleteTags"
+    ],
+    "taggable": true,
+    "tagOnCreate": true,
+    "tagUpdatable": true,
+    "tagProperty": "/properties/Tags",
+    "cloudFormationSystemTags": false
+  },
+  "typeName": "AWS::EC2::NetworkInsightsAnalysis",
+  "readOnlyProperties": [
+    "/properties/NetworkInsightsAnalysisId",
+    "/properties/NetworkInsightsAnalysisArn",
+    "/properties/StartDate",
+    "/properties/Status",
+    "/properties/StatusMessage",
+    "/properties/NetworkPathFound",
+    "/properties/ForwardPathComponents",
+    "/properties/ReturnPathComponents",
+    "/properties/Explanations",
+    "/properties/AlternatePathHints",
+    "/properties/SuggestedAccounts"
+  ],
+  "description": "Resource schema for AWS::EC2::NetworkInsightsAnalysis",
+  "createOnlyProperties": [
+    "/properties/NetworkInsightsPathId",
+    "/properties/FilterInArns",
+    "/properties/FilterOutArns"
+  ],
+  "primaryIdentifier": [
+    "/properties/NetworkInsightsAnalysisId"
+  ],
+  "required": [
+    "NetworkInsightsPathId"
+  ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
   "handlers": {
     "read": {
@@ -40,34 +77,12 @@
       ]
     }
   },
-  "typeName": "AWS::EC2::NetworkInsightsAnalysis",
-  "readOnlyProperties": [
-    "/properties/NetworkInsightsAnalysisId",
-    "/properties/NetworkInsightsAnalysisArn",
-    "/properties/StartDate",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/NetworkPathFound",
-    "/properties/ForwardPathComponents",
-    "/properties/ReturnPathComponents",
-    "/properties/Explanations",
-    "/properties/AlternatePathHints",
-    "/properties/SuggestedAccounts"
-  ],
-  "description": "Resource schema for AWS::EC2::NetworkInsightsAnalysis",
   "additionalIdentifiers": [
     [
       "/properties/NetworkInsightsAnalysisArn"
     ]
   ],
-  "createOnlyProperties": [
-    "/properties/NetworkInsightsPathId",
-    "/properties/FilterInArns"
-  ],
   "additionalProperties": false,
-  "primaryIdentifier": [
-    "/properties/NetworkInsightsAnalysisId"
-  ],
   "definitions": {
     "PathComponent": {
       "additionalProperties": false,
@@ -609,9 +624,6 @@
       ]
     }
   },
-  "required": [
-    "NetworkInsightsPathId"
-  ],
   "properties": {
     "Status": {
       "type": "string",
@@ -631,6 +643,14 @@
     },
     "NetworkInsightsAnalysisId": {
       "type": "string"
+    },
+    "FilterOutArns": {
+      "uniqueItems": false,
+      "insertionOrder": true,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResourceArn"
+      }
     },
     "NetworkInsightsPathId": {
       "type": "string"

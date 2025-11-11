@@ -147,6 +147,9 @@
             "PROVIDER",
             "RULE_BASED"
           ]
+        },
+        "NormalizationVersion": {
+          "type": "string"
         }
       }
     },
@@ -158,6 +161,21 @@
       "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(idmappingworkflow/.*)$",
       "description": "The default IdMappingWorkflow arn",
       "type": "string"
+    },
+    "IdMappingIncrementalRunConfig": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "IncrementalRunType": {
+          "type": "string",
+          "enum": [
+            "ON_DEMAND"
+          ]
+        }
+      },
+      "required": [
+        "IncrementalRunType"
+      ]
     },
     "UpdatedAt": {
       "description": "The time of this IdMappingWorkflow got last updated at",
@@ -339,6 +357,9 @@
       "items": {
         "$ref": "#/definitions/IdMappingWorkflowOutputSource"
       }
+    },
+    "IdMappingIncrementalRunConfig": {
+      "$ref": "#/definitions/IdMappingIncrementalRunConfig"
     },
     "WorkflowArn": {
       "$ref": "#/definitions/IdMappingWorkflowArn"
