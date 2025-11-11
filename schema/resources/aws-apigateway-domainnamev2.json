@@ -11,6 +11,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "IpAddressType": {
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -53,6 +56,16 @@
     "DomainNameArn": {
       "type": "string",
       "description": "The amazon resource name (ARN) of the domain name resource."
+    },
+    "RoutingMode": {
+      "type": "string",
+      "description": "The valid routing modes are [BASE_PATH_MAPPING_ONLY], [ROUTING_RULE_THEN_BASE_PATH_MAPPING] and [ROUTING_RULE_ONLY]. All other inputs are invalid.",
+      "default": "BASE_PATH_MAPPING_ONLY",
+      "enum": [
+        "BASE_PATH_MAPPING_ONLY",
+        "ROUTING_RULE_THEN_BASE_PATH_MAPPING",
+        "ROUTING_RULE_ONLY"
+      ]
     },
     "Tags": {
       "type": "array",

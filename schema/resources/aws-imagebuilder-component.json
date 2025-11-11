@@ -75,6 +75,35 @@
       "items": {
         "type": "string"
       }
+    },
+    "LatestVersion": {
+      "description": "The latest version references of the component.",
+      "$ref": "#/definitions/LatestVersion"
+    }
+  },
+  "definitions": {
+    "LatestVersion": {
+      "description": "The latest version references of the component.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Arn": {
+          "description": "The latest version ARN of the created component.",
+          "type": "string"
+        },
+        "Major": {
+          "description": "The latest version ARN of the created component, with the same major version.",
+          "type": "string"
+        },
+        "Minor": {
+          "description": "The latest version ARN of the created component, with the same minor version.",
+          "type": "string"
+        },
+        "Patch": {
+          "description": "The latest version ARN of the created component, with the same patch version.",
+          "type": "string"
+        }
+      }
     }
   },
   "additionalProperties": false,
@@ -83,30 +112,22 @@
     "Platform",
     "Version"
   ],
-  "oneOf": [
-    {
-      "required": [
-        "Data"
-      ]
-    },
-    {
-      "required": [
-        "Uri"
-      ]
-    }
-  ],
   "primaryIdentifier": [
     "/properties/Arn"
   ],
   "readOnlyProperties": [
     "/properties/Arn",
     "/properties/Type",
-    "/properties/Encrypted"
+    "/properties/Encrypted",
+    "/properties/LatestVersion",
+    "/properties/LatestVersion/Arn",
+    "/properties/LatestVersion/Major",
+    "/properties/LatestVersion/Minor",
+    "/properties/LatestVersion/Patch"
   ],
   "writeOnlyProperties": [
     "/properties/Data",
-    "/properties/Uri",
-    "/properties/Platform"
+    "/properties/Uri"
   ],
   "createOnlyProperties": [
     "/properties/Name",
@@ -117,18 +138,17 @@
     "/properties/Data",
     "/properties/Uri",
     "/properties/KmsKeyId",
-    "/properties/SupportedOsVersions",
-    "/properties/Tags"
+    "/properties/SupportedOsVersions"
   ],
   "tagging": {
     "taggable": true,
     "tagOnCreate": true,
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "cloudFormationSystemTags": true,
     "tagProperty": "/properties/Tags",
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ]
   },
   "handlers": {
@@ -150,6 +170,12 @@
         "imagebuilder:CreateComponent"
       ]
     },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
+      ]
+    },
     "read": {
       "permissions": [
         "imagebuilder:GetComponent",
@@ -159,7 +185,7 @@
     "delete": {
       "permissions": [
         "imagebuilder:GetComponent",
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:DeleteComponent"
       ]
     },
@@ -173,10 +199,7 @@
           "Arn": {
             "$ref": "resource-schema.json#/properties/Arn"
           }
-        },
-        "required": [
-          "Arn"
-        ]
+        }
       }
     }
   },
@@ -196,6 +219,10 @@
     "Encrypted": {
       "description": "The encryption status of the component.",
       "type": "boolean"
+    },
+    "LatestVersion": {
+      "description": "The latest version references of the component.",
+      "$ref": "#/definitions/LatestVersion"
     }
   }
 }

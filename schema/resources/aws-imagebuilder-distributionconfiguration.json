@@ -73,6 +73,14 @@
           "items": {
             "$ref": "#/definitions/FastLaunchConfiguration"
           }
+        },
+        "SsmParameterConfigurations": {
+          "description": "The SSM parameter configurations to use for AMI distribution.",
+          "type": "array",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/SsmParameterConfiguration"
+          }
         }
       },
       "required": [
@@ -278,6 +286,32 @@
           "type": "integer"
         }
       }
+    },
+    "SsmParameterConfiguration": {
+      "description": "The SSM parameter configuration for AMI distribution.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AmiAccountId": {
+          "description": "The account ID for the AMI to update the parameter with.",
+          "type": "string"
+        },
+        "ParameterName": {
+          "description": "The name of the SSM parameter.",
+          "type": "string"
+        },
+        "DataType": {
+          "description": "The data type of the SSM parameter.",
+          "type": "string",
+          "enum": [
+            "text",
+            "aws:ec2:image"
+          ]
+        }
+      },
+      "required": [
+        "ParameterName"
+      ]
     }
   },
   "additionalProperties": false,
@@ -299,7 +333,11 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "imagebuilder:TagResource",
+      "imagebuilder:UntagResource"
+    ]
   },
   "handlers": {
     "create": {
@@ -309,6 +347,7 @@
         "ec2:DescribeLaunchTemplates",
         "ec2:CreateLaunchTemplateVersion",
         "ec2:ModifyLaunchTemplate",
+        "ssm:GetParameter",
         "imagebuilder:TagResource",
         "imagebuilder:GetDistributionConfiguration",
         "imagebuilder:CreateDistributionConfiguration"
@@ -319,8 +358,11 @@
         "ec2:DescribeLaunchTemplates",
         "ec2:CreateLaunchTemplateVersion",
         "ec2:ModifyLaunchTemplate",
+        "ssm:GetParameter",
         "imagebuilder:GetDistributionConfiguration",
-        "imagebuilder:UpdateDistributionConfiguration"
+        "imagebuilder:UpdateDistributionConfiguration",
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
       ]
     },
     "read": {
@@ -331,7 +373,7 @@
     "delete": {
       "permissions": [
         "imagebuilder:GetDistributionConfiguration",
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:DeleteDistributionConfiguration"
       ]
     },

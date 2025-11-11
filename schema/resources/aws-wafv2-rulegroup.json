@@ -120,6 +120,9 @@
         },
         "JA4Fingerprint": {
           "$ref": "#/definitions/JA4Fingerprint"
+        },
+        "UriFragment": {
+          "$ref": "#/definitions/UriFragment"
         }
       },
       "additionalProperties": false
@@ -337,6 +340,9 @@
         },
         "JA4Fingerprint": {
           "$ref": "#/definitions/RateLimitJA4Fingerprint"
+        },
+        "ASN": {
+          "$ref": "#/definitions/RateLimitAsn"
         }
       },
       "additionalProperties": false
@@ -505,6 +511,10 @@
         "FallbackBehavior"
       ],
       "additionalProperties": false
+    },
+    "RateLimitAsn": {
+      "description": "Specifies the request's ASN as an aggregate key for a rate-based rule.",
+      "type": "object"
     },
     "RateLimit": {
       "type": "integer",
@@ -991,6 +1001,9 @@
         },
         "RegexMatchStatement": {
           "$ref": "#/definitions/RegexMatchStatement"
+        },
+        "AsnMatchStatement": {
+          "$ref": "#/definitions/AsnMatchStatement"
         }
       },
       "additionalProperties": false
@@ -1179,6 +1192,23 @@
         "FieldToMatch",
         "TextTransformations"
       ],
+      "additionalProperties": false
+    },
+    "AsnMatchStatement": {
+      "type": "object",
+      "properties": {
+        "AsnList": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        },
+        "ForwardedIPConfig": {
+          "$ref": "#/definitions/ForwardedIPConfiguration"
+        }
+      },
       "additionalProperties": false
     },
     "CaptchaConfig": {
@@ -1390,6 +1420,20 @@
         "FallbackBehavior"
       ],
       "additionalProperties": false
+    },
+    "UriFragment": {
+      "description": "The path component of the URI Fragment. This is the part of a web request that identifies a fragment uri, for example, /abcd#introduction",
+      "type": "object",
+      "properties": {
+        "FallbackBehavior": {
+          "type": "string",
+          "enum": [
+            "MATCH",
+            "NO_MATCH"
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -1477,13 +1521,20 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "taggable": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "wafv2:TagResource",
+      "wafv2:UntagResource",
+      "wafv2:ListTagsForResource"
+    ]
   },
   "handlers": {
     "create": {
       "permissions": [
         "wafv2:CreateRuleGroup",
         "wafv2:GetRuleGroup",
+        "wafv2:TagResource",
+        "wafv2:UntagResource",
         "wafv2:ListTagsForResource"
       ]
     },

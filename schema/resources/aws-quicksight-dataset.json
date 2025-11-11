@@ -1,11 +1,21 @@
 {
   "tagging": {
+    "permissions": [
+      "quicksight:TagResource",
+      "quicksight:UntagResource",
+      "quicksight:ListTagsForResource"
+    ],
     "taggable": true,
     "tagOnCreate": true,
     "tagUpdatable": true,
     "tagProperty": "/properties/Tags",
     "cloudFormationSystemTags": true
   },
+  "deprecatedProperties": [
+    "/properties/LogicalTableMap",
+    "/properties/RowLevelPermissionDataSet",
+    "/properties/RowLevelPermissionTagConfiguration"
+  ],
   "handlers": {
     "read": {
       "permissions": [
@@ -96,36 +106,26 @@
     "/properties/DataSetId"
   ],
   "definitions": {
-    "IntegerDatasetParameter": {
-      "description": "<p>An integer parameter for a dataset.</p>",
+    "PivotConfiguration": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "ValueType": {
-          "$ref": "#/definitions/DatasetParameterValueType"
-        },
-        "DefaultValues": {
-          "$ref": "#/definitions/IntegerDatasetParameterDefaultValues"
-        },
-        "Id": {
+        "LabelColumnName": {
           "minLength": 1,
-          "pattern": "^[a-zA-Z0-9-]+$",
-          "description": "<p>An identifier for the integer parameter created in the dataset.</p>",
           "type": "string",
-          "maxLength": 128
+          "maxLength": 127
         },
-        "Name": {
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "description": "<p>The name of the integer parameter that is created in the dataset.</p>",
-          "type": "string",
-          "maxLength": 2048
+        "PivotedLabels": {
+          "minItems": 0,
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PivotedLabel"
+          }
         }
       },
       "required": [
-        "Id",
-        "Name",
-        "ValueType"
+        "PivotedLabels"
       ]
     },
     "RowLevelPermissionPolicy": {
@@ -168,6 +168,1023 @@
         "TagKey"
       ]
     },
+    "FileFormat": {
+      "type": "string",
+      "enum": [
+        "CSV",
+        "TSV",
+        "CLF",
+        "ELF",
+        "XLSX",
+        "JSON"
+      ]
+    },
+    "DataPrepSimpleAggregationFunctionType": {
+      "type": "string",
+      "enum": [
+        "COUNT",
+        "DISTINCT_COUNT",
+        "SUM",
+        "AVERAGE",
+        "MEDIAN",
+        "MAX",
+        "MIN",
+        "VARIANCE",
+        "STANDARD_DEVIATION"
+      ]
+    },
+    "RenameColumnsOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "RenameColumnOperations": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RenameColumnOperation"
+          }
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "Source",
+        "RenameColumnOperations"
+      ]
+    },
+    "ValueColumnConfiguration": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "AggregationFunction": {
+          "$ref": "#/definitions/DataPrepAggregationFunction"
+        }
+      }
+    },
+    "DataSetNumericComparisonFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Operator": {
+          "$ref": "#/definitions/DataSetNumericComparisonFilterOperator"
+        },
+        "Value": {
+          "$ref": "#/definitions/DataSetNumericFilterValue"
+        }
+      },
+      "required": [
+        "Operator"
+      ]
+    },
+    "DataSetStringFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "ComparisonFilterCondition": {
+          "$ref": "#/definitions/DataSetStringComparisonFilterCondition"
+        },
+        "ListFilterCondition": {
+          "$ref": "#/definitions/DataSetStringListFilterCondition"
+        }
+      }
+    },
+    "JoinKeyProperties": {
+      "description": "<p>Properties associated with the columns participating in a join.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "UniqueKey": {
+          "description": "<p>A value that indicates that a row in a table is uniquely identified by the columns in\n            a join key. This is used by Amazon QuickSight to optimize query performance.</p>",
+          "type": "boolean"
+        }
+      }
+    },
+    "DecimalDatasetParameterDefaultValues": {
+      "description": "<p>The default values of a decimal parameter.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "StaticValues": {
+          "minItems": 0,
+          "maxItems": 32,
+          "description": "<p>A list of static default values for a given decimal parameter.</p>",
+          "type": "array",
+          "items": {
+            "default": 0,
+            "description": "<p>The default value for the decimal parameter.</p>",
+            "type": "number"
+          }
+        }
+      }
+    },
+    "Status": {
+      "type": "string",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "PhysicalTableMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/PhysicalTable"
+        }
+      },
+      "maxProperties": 32,
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 0
+    },
+    "DataPrepSimpleAggregationFunction": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "FunctionType": {
+          "$ref": "#/definitions/DataPrepSimpleAggregationFunctionType"
+        },
+        "InputColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        }
+      },
+      "required": [
+        "FunctionType"
+      ]
+    },
+    "RefreshConfiguration": {
+      "description": "<p>The refresh configuration of a dataset.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "IncrementalRefresh": {
+          "$ref": "#/definitions/IncrementalRefresh"
+        }
+      },
+      "required": [
+        "IncrementalRefresh"
+      ]
+    },
+    "RelationalTable": {
+      "description": "<p>A physical table type for relational data sources.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "DataSourceArn": {
+          "description": "<p>The Amazon Resource Name (ARN) for the data source.</p>",
+          "type": "string"
+        },
+        "InputColumns": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "description": "<p>The column schema of the table.</p>",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputColumn"
+          }
+        },
+        "Schema": {
+          "minLength": 0,
+          "description": "<p>The schema name. This name applies to certain relational database engines.</p>",
+          "type": "string",
+          "maxLength": 256
+        },
+        "Catalog": {
+          "minLength": 0,
+          "description": "<p>The catalog associated with a table.</p>",
+          "type": "string",
+          "maxLength": 256
+        },
+        "Name": {
+          "minLength": 1,
+          "description": "<p>The name of the relational table.</p>",
+          "type": "string",
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "DataSourceArn",
+        "InputColumns",
+        "Name"
+      ]
+    },
+    "PerformanceConfiguration": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "UniqueKeys": {
+          "minItems": 1,
+          "maxItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UniqueKey"
+          }
+        }
+      }
+    },
+    "InputColumn": {
+      "description": "<p>Metadata for a column that is used as the input of a transform operation.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Type": {
+          "$ref": "#/definitions/InputColumnDataType"
+        },
+        "SubType": {
+          "$ref": "#/definitions/ColumnDataSubType"
+        },
+        "Id": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Name": {
+          "minLength": 1,
+          "description": "<p>The name of this column in the underlying data source.</p>",
+          "type": "string",
+          "maxLength": 127
+        }
+      },
+      "required": [
+        "Name",
+        "Type"
+      ]
+    },
+    "LogicalTableMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/LogicalTable"
+        }
+      },
+      "maxProperties": 64,
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 1
+    },
+    "DateTimeDatasetParameterDefaultValues": {
+      "description": "<p>The default values of a date time parameter.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "StaticValues": {
+          "minItems": 0,
+          "maxItems": 32,
+          "description": "<p>A list of static default values for a given date time parameter.</p>",
+          "type": "array",
+          "items": {
+            "description": "<p>The default value for the date time parameter.</p>",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "LogicalTableSource": {
+      "description": "<p>Information about the source of a logical table. This is a variant type structure. For\n            this structure to be valid, only one of the attributes can be non-null.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "PhysicalTableId": {
+          "minLength": 1,
+          "pattern": "^[0-9a-zA-Z-]*$",
+          "description": "<p>Physical table ID.</p>",
+          "type": "string",
+          "maxLength": 64
+        },
+        "JoinInstruction": {
+          "$ref": "#/definitions/JoinInstruction"
+        },
+        "DataSetArn": {
+          "description": "<p>The Amazon Resource Number (ARN) of the parent dataset.</p>",
+          "type": "string"
+        }
+      }
+    },
+    "TextQualifier": {
+      "type": "string",
+      "enum": [
+        "DOUBLE_QUOTE",
+        "SINGLE_QUOTE"
+      ]
+    },
+    "SemanticTableMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/SemanticTable"
+        }
+      },
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 1
+    },
+    "AppendedColumn": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "NewColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "ColumnName",
+        "NewColumnId"
+      ]
+    },
+    "DataSetColumnIdMapping": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "SourceColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "TargetColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "SourceColumnId",
+        "TargetColumnId"
+      ]
+    },
+    "ImportTableOperationSource": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "SourceTableId": {
+          "minLength": 1,
+          "pattern": "^[0-9a-zA-Z-]*$",
+          "type": "string",
+          "maxLength": 64
+        },
+        "ColumnIdMappings": {
+          "minItems": 1,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSetColumnIdMapping"
+          }
+        }
+      },
+      "required": [
+        "SourceTableId"
+      ]
+    },
+    "Aggregation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "AggregationFunction": {
+          "$ref": "#/definitions/DataPrepAggregationFunction"
+        },
+        "NewColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "NewColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "AggregationFunction",
+        "NewColumnId",
+        "NewColumnName"
+      ]
+    },
+    "DecimalDatasetParameter": {
+      "description": "<p>A decimal parameter for a dataset.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ValueType": {
+          "$ref": "#/definitions/DatasetParameterValueType"
+        },
+        "DefaultValues": {
+          "$ref": "#/definitions/DecimalDatasetParameterDefaultValues"
+        },
+        "Id": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9-]+$",
+          "description": "<p>An identifier for the decimal parameter created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 128
+        },
+        "Name": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "description": "<p>The name of the decimal parameter that is created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "Id",
+        "Name",
+        "ValueType"
+      ]
+    },
+    "OutputColumnNameOverride": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "OutputColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "SourceColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        }
+      },
+      "required": [
+        "OutputColumnName"
+      ]
+    },
+    "DataSetNumericRangeFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "IncludeMaximum": {
+          "default": null,
+          "type": "boolean"
+        },
+        "RangeMinimum": {
+          "$ref": "#/definitions/DataSetNumericFilterValue"
+        },
+        "RangeMaximum": {
+          "$ref": "#/definitions/DataSetNumericFilterValue"
+        },
+        "IncludeMinimum": {
+          "default": null,
+          "type": "boolean"
+        }
+      }
+    },
+    "UnpivotOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "UnpivotedLabelColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "ColumnsToUnpivot": {
+          "minItems": 0,
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ColumnToUnpivot"
+          }
+        },
+        "UnpivotedLabelColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "UnpivotedValueColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "UnpivotedValueColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "ColumnsToUnpivot",
+        "Source",
+        "UnpivotedLabelColumnId",
+        "UnpivotedLabelColumnName",
+        "UnpivotedValueColumnId",
+        "UnpivotedValueColumnName"
+      ]
+    },
+    "TransformStepMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/TransformStep"
+        }
+      },
+      "maxProperties": 256,
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 1
+    },
+    "DateTimeDatasetParameter": {
+      "description": "<p>A date time parameter for a dataset.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ValueType": {
+          "$ref": "#/definitions/DatasetParameterValueType"
+        },
+        "TimeGranularity": {
+          "$ref": "#/definitions/TimeGranularity"
+        },
+        "DefaultValues": {
+          "$ref": "#/definitions/DateTimeDatasetParameterDefaultValues"
+        },
+        "Id": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9-]+$",
+          "description": "<p>An identifier for the parameter that is created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 128
+        },
+        "Name": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "description": "<p>The name of the date time parameter that is created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "Id",
+        "Name",
+        "ValueType"
+      ]
+    },
+    "RefreshFailureAlertStatus": {
+      "type": "string",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "GeoSpatialColumnGroup": {
+      "description": "<p>Geospatial column group that denotes a hierarchy.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Columns": {
+          "minItems": 1,
+          "maxItems": 16,
+          "description": "<p>Columns in this hierarchy.</p>",
+          "type": "array",
+          "items": {
+            "minLength": 1,
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "CountryCode": {
+          "$ref": "#/definitions/GeoSpatialCountryCode"
+        },
+        "Name": {
+          "minLength": 1,
+          "description": "<p>A display name for the hierarchy.</p>",
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "Columns",
+        "Name"
+      ]
+    },
+    "CastColumnTypesOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "CastColumnTypeOperations": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CastColumnTypeOperation"
+          }
+        },
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "Source",
+        "CastColumnTypeOperations"
+      ]
+    },
+    "TransformStep": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ProjectStep": {
+          "$ref": "#/definitions/ProjectOperation"
+        },
+        "CreateColumnsStep": {
+          "$ref": "#/definitions/CreateColumnsOperation"
+        },
+        "RenameColumnsStep": {
+          "$ref": "#/definitions/RenameColumnsOperation"
+        },
+        "CastColumnTypesStep": {
+          "$ref": "#/definitions/CastColumnTypesOperation"
+        },
+        "ImportTableStep": {
+          "$ref": "#/definitions/ImportTableOperation"
+        },
+        "UnpivotStep": {
+          "$ref": "#/definitions/UnpivotOperation"
+        },
+        "JoinStep": {
+          "$ref": "#/definitions/JoinOperation"
+        },
+        "AppendStep": {
+          "$ref": "#/definitions/AppendOperation"
+        },
+        "FiltersStep": {
+          "$ref": "#/definitions/FiltersOperation"
+        },
+        "AggregateStep": {
+          "$ref": "#/definitions/AggregateOperation"
+        },
+        "PivotStep": {
+          "$ref": "#/definitions/PivotOperation"
+        }
+      }
+    },
+    "GeoSpatialCountryCode": {
+      "type": "string",
+      "enum": [
+        "US"
+      ]
+    },
+    "OverrideDatasetParameterOperation": {
+      "description": "<p>A transform operation that overrides the dataset parameter values that are defined in another dataset.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "NewDefaultValues": {
+          "$ref": "#/definitions/NewDefaultValues"
+        },
+        "ParameterName": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "description": "<p>The name of the parameter to be overridden with different values.</p>",
+          "type": "string",
+          "maxLength": 2048
+        },
+        "NewParameterName": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "description": "<p>The new name for the parameter.</p>",
+          "type": "string",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "ParameterName"
+      ]
+    },
+    "DatasetParameter": {
+      "description": "<p>A dataset parameter.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "IntegerDatasetParameter": {
+          "$ref": "#/definitions/IntegerDatasetParameter"
+        },
+        "DateTimeDatasetParameter": {
+          "$ref": "#/definitions/DateTimeDatasetParameter"
+        },
+        "DecimalDatasetParameter": {
+          "$ref": "#/definitions/DecimalDatasetParameter"
+        },
+        "StringDatasetParameter": {
+          "$ref": "#/definitions/StringDatasetParameter"
+        }
+      }
+    },
+    "IntegerDatasetParameterDefaultValues": {
+      "description": "<p>The default values of an integer parameter.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "StaticValues": {
+          "minItems": 0,
+          "maxItems": 32,
+          "description": "<p>A list of static default values for a given integer parameter.</p>",
+          "type": "array",
+          "items": {
+            "default": 0,
+            "format": "int64",
+            "description": "<p>A list of static default values for a given integer parameter.</p>",
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "DataSetUseAs": {
+      "type": "string",
+      "enum": [
+        "RLS_RULES"
+      ]
+    },
+    "StringDatasetParameterDefaultValues": {
+      "description": "<p>The default values of a string parameter.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "StaticValues": {
+          "minItems": 0,
+          "maxItems": 32,
+          "description": "<p>A list of static default values for a given string parameter.</p>",
+          "type": "array",
+          "items": {
+            "minLength": 0,
+            "description": "<p>The default value for the string parameter.</p>",
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "DestinationTable": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Source": {
+          "$ref": "#/definitions/DestinationTableSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "Source"
+      ]
+    },
+    "LookbackWindowSizeUnit": {
+      "type": "string",
+      "enum": [
+        "HOUR",
+        "DAY",
+        "WEEK"
+      ]
+    },
+    "Tag": {
+      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Value": {
+          "minLength": 1,
+          "description": "<p>Tag value.</p>",
+          "type": "string",
+          "maxLength": 256
+        },
+        "Key": {
+          "minLength": 1,
+          "description": "<p>Tag key.</p>",
+          "type": "string",
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "Key",
+        "Value"
+      ]
+    },
+    "ProjectOperation": {
+      "description": "<p>A transform operation that projects columns. Operations that come after a projection\n            can only refer to projected columns.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "ProjectedColumns": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "description": "<p>Projected columns.</p>",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      }
+    },
+    "SaaSTable": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "DataSourceArn": {
+          "type": "string"
+        },
+        "InputColumns": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputColumn"
+          }
+        },
+        "TablePath": {
+          "minItems": 1,
+          "maxItems": 32,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TablePathElement"
+          }
+        }
+      },
+      "required": [
+        "DataSourceArn",
+        "InputColumns",
+        "TablePath"
+      ]
+    },
+    "IntegerDatasetParameter": {
+      "description": "<p>An integer parameter for a dataset.</p>",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ValueType": {
+          "$ref": "#/definitions/DatasetParameterValueType"
+        },
+        "DefaultValues": {
+          "$ref": "#/definitions/IntegerDatasetParameterDefaultValues"
+        },
+        "Id": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9-]+$",
+          "description": "<p>An identifier for the integer parameter created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 128
+        },
+        "Name": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "description": "<p>The name of the integer parameter that is created in the dataset.</p>",
+          "type": "string",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "Id",
+        "Name",
+        "ValueType"
+      ]
+    },
+    "FiltersOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "FilterOperations": {
+          "minItems": 0,
+          "maxItems": 128,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterOperation"
+          }
+        },
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "FilterOperations",
+        "Source"
+      ]
+    },
+    "PivotedLabel": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "NewColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "NewColumnId": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "LabelName": {
+          "minLength": 0,
+          "type": "string",
+          "maxLength": 2047
+        }
+      },
+      "required": [
+        "LabelName",
+        "NewColumnId",
+        "NewColumnName"
+      ]
+    },
+    "RefreshFailureConfiguration": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "EmailAlert": {
+          "$ref": "#/definitions/RefreshFailureEmailAlert"
+        }
+      }
+    },
+    "PivotOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "PivotConfiguration": {
+          "$ref": "#/definitions/PivotConfiguration"
+        },
+        "GroupByColumnNames": {
+          "minItems": 0,
+          "maxItems": 128,
+          "type": "array",
+          "items": {
+            "minLength": 1,
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "ValueColumnConfiguration": {
+          "$ref": "#/definitions/ValueColumnConfiguration"
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "PivotConfiguration",
+        "Source",
+        "ValueColumnConfiguration"
+      ]
+    },
+    "DataSetStringListFilterOperator": {
+      "type": "string",
+      "enum": [
+        "INCLUDE",
+        "EXCLUDE"
+      ]
+    },
     "LogicalTable": {
       "description": "<p>A <i>logical table</i> is a unit that joins and that data\n            transformations operate on. A logical table has a source, which can be either a physical\n            table or result of a join. When a logical table points to a physical table, the logical\n            table acts as a mutable copy of that physical table through transform operations.</p>",
       "additionalProperties": false,
@@ -193,18 +1210,29 @@
         }
       },
       "required": [
-        "Alias"
+        "Alias",
+        "Source"
       ]
     },
-    "FileFormat": {
+    "RowLevelPermissionConfiguration": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "TagConfiguration": {
+          "$ref": "#/definitions/RowLevelPermissionTagConfiguration"
+        },
+        "RowLevelPermissionDataSet": {
+          "$ref": "#/definitions/RowLevelPermissionDataSet"
+        }
+      }
+    },
+    "DataSetDateComparisonFilterOperator": {
       "type": "string",
       "enum": [
-        "CSV",
-        "TSV",
-        "CLF",
-        "ELF",
-        "XLSX",
-        "JSON"
+        "BEFORE",
+        "BEFORE_OR_EQUALS_TO",
+        "AFTER",
+        "AFTER_OR_EQUALS_TO"
       ]
     },
     "IngestionWaitPolicy": {
@@ -225,6 +1253,32 @@
           "minimum": 1
         }
       }
+    },
+    "DataSetStringComparisonFilterOperator": {
+      "type": "string",
+      "enum": [
+        "EQUALS",
+        "DOES_NOT_EQUAL",
+        "CONTAINS",
+        "DOES_NOT_CONTAIN",
+        "STARTS_WITH",
+        "ENDS_WITH"
+      ]
+    },
+    "DataSetStringComparisonFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Operator": {
+          "$ref": "#/definitions/DataSetStringComparisonFilterOperator"
+        },
+        "Value": {
+          "$ref": "#/definitions/DataSetStringFilterValue"
+        }
+      },
+      "required": [
+        "Operator"
+      ]
     },
     "StringDatasetParameter": {
       "description": "<p>A string parameter for a dataset.</p>",
@@ -258,6 +1312,26 @@
         "ValueType"
       ]
     },
+    "RefreshFailureEmailAlert": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "AlertStatus": {
+          "$ref": "#/definitions/RefreshFailureAlertStatus"
+        }
+      }
+    },
+    "DestinationTableMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/DestinationTable"
+        }
+      },
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "type": "object",
+      "minProperties": 1
+    },
     "UntagColumnOperation": {
       "description": "<p>A transform operation that removes tags associated with a column.</p>",
       "additionalProperties": false,
@@ -282,21 +1356,37 @@
         "TagNames"
       ]
     },
+    "DataSetDateFilterValue": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "StaticValue": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
     "FilterOperation": {
       "description": "<p>A transform operation that filters rows based on a condition.</p>",
       "additionalProperties": false,
       "type": "object",
       "properties": {
+        "DateFilterCondition": {
+          "$ref": "#/definitions/DataSetDateFilterCondition"
+        },
+        "StringFilterCondition": {
+          "$ref": "#/definitions/DataSetStringFilterCondition"
+        },
         "ConditionExpression": {
           "minLength": 1,
           "description": "<p>An expression that must evaluate to a Boolean value. Rows for which the expression\n            evaluates to true are kept in the dataset.</p>",
           "type": "string",
           "maxLength": 4096
+        },
+        "NumericFilterCondition": {
+          "$ref": "#/definitions/DataSetNumericFilterCondition"
         }
-      },
-      "required": [
-        "ConditionExpression"
-      ]
+      }
     },
     "ColumnLevelPermissionRule": {
       "description": "<p>A rule defined to grant access on one or more restricted columns.\n            Each dataset can have multiple rules.\n            To create a restricted column, you add it to one or more rules.\n            Each rule must contain at least one column and at least one user or group.\n            To be able to see a restricted column, a user or group needs to be added\n            to a rule for that column.</p>",
@@ -351,6 +1441,17 @@
         "NewColumnType"
       ]
     },
+    "DataSetNumericComparisonFilterOperator": {
+      "type": "string",
+      "enum": [
+        "EQUALS",
+        "DOES_NOT_EQUAL",
+        "GREATER_THAN",
+        "GREATER_THAN_OR_EQUALS_TO",
+        "LESS_THAN",
+        "LESS_THAN_OR_EQUALS_TO"
+      ]
+    },
     "TimeGranularity": {
       "type": "string",
       "enum": [
@@ -398,30 +1499,27 @@
       "additionalProperties": false,
       "type": "object",
       "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
         "Columns": {
-          "minItems": 1,
-          "maxItems": 128,
+          "minItems": 0,
+          "maxItems": 256,
           "description": "<p>Calculated columns to create.</p>",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CalculatedColumn"
           }
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
         }
       },
       "required": [
         "Columns"
       ]
-    },
-    "JoinKeyProperties": {
-      "description": "<p>Properties associated with the columns participating in a join.</p>",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "UniqueKey": {
-          "description": "<p>A value that indicates that a row in a table is uniquely identified by the columns in\n            a join key. This is used by Amazon QuickSight to optimize query performance.</p>",
-          "type": "boolean"
-        }
-      }
     },
     "ResourcePermission": {
       "description": "<p>Permission for the resource.</p>",
@@ -449,41 +1547,21 @@
         "Principal"
       ]
     },
-    "DecimalDatasetParameterDefaultValues": {
-      "description": "<p>The default values of a decimal parameter.</p>",
+    "TablePathElement": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "StaticValues": {
-          "minItems": 0,
-          "maxItems": 32,
-          "description": "<p>A list of static default values for a given decimal parameter.</p>",
-          "type": "array",
-          "items": {
-            "default": 0,
-            "description": "<p>The default value for the decimal parameter.</p>",
-            "type": "number"
-          }
+        "Id": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 256
+        },
+        "Name": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 256
         }
       }
-    },
-    "Status": {
-      "type": "string",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ]
-    },
-    "PhysicalTableMap": {
-      "patternProperties": {
-        "^[0-9a-zA-Z-]*$": {
-          "$ref": "#/definitions/PhysicalTable"
-        }
-      },
-      "maxProperties": 32,
-      "additionalProperties": false,
-      "type": "object",
-      "minProperties": 0
     },
     "TagColumnOperation": {
       "description": "<p>A transform operation that tags a column with additional information.</p>",
@@ -511,17 +1589,37 @@
         "Tags"
       ]
     },
-    "RefreshConfiguration": {
-      "description": "<p>The refresh configuration of a dataset.</p>",
+    "DataSetStringListFilterCondition": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "IncrementalRefresh": {
-          "$ref": "#/definitions/IncrementalRefresh"
+        "Operator": {
+          "$ref": "#/definitions/DataSetStringListFilterOperator"
+        },
+        "Values": {
+          "$ref": "#/definitions/DataSetStringListFilterValue"
         }
       },
       "required": [
-        "IncrementalRefresh"
+        "Operator"
+      ]
+    },
+    "ImportTableOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Source": {
+          "$ref": "#/definitions/ImportTableOperationSource"
+        }
+      },
+      "required": [
+        "Alias",
+        "Source"
       ]
     },
     "LookbackWindow": {
@@ -549,48 +1647,6 @@
         "SizeUnit"
       ]
     },
-    "RelationalTable": {
-      "description": "<p>A physical table type for relational data sources.</p>",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "DataSourceArn": {
-          "description": "<p>The Amazon Resource Name (ARN) for the data source.</p>",
-          "type": "string"
-        },
-        "InputColumns": {
-          "minItems": 1,
-          "maxItems": 2048,
-          "description": "<p>The column schema of the table.</p>",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputColumn"
-          }
-        },
-        "Schema": {
-          "minLength": 0,
-          "description": "<p>The schema name. This name applies to certain relational database engines.</p>",
-          "type": "string",
-          "maxLength": 256
-        },
-        "Catalog": {
-          "minLength": 0,
-          "description": "<p>The catalog associated with a table.</p>",
-          "type": "string",
-          "maxLength": 256
-        },
-        "Name": {
-          "minLength": 1,
-          "description": "<p>The name of the relational table.</p>",
-          "type": "string",
-          "maxLength": 256
-        }
-      },
-      "required": [
-        "DataSourceArn",
-        "Name"
-      ]
-    },
     "DatasetParameterValueType": {
       "type": "string",
       "enum": [
@@ -598,19 +1654,34 @@
         "SINGLE_VALUED"
       ]
     },
-    "PerformanceConfiguration": {
+    "JoinOperationType": {
+      "type": "string",
+      "enum": [
+        "INNER",
+        "OUTER",
+        "LEFT",
+        "RIGHT"
+      ]
+    },
+    "SemanticModelConfiguration": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "UniqueKeys": {
-          "minItems": 1,
-          "maxItems": 1,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UniqueKey"
-          }
+        "TableMap": {
+          "$ref": "#/definitions/SemanticTableMap"
         }
       }
+    },
+    "SourceTableMap": {
+      "patternProperties": {
+        "^[0-9a-zA-Z-]*$": {
+          "$ref": "#/definitions/SourceTable"
+        }
+      },
+      "maxProperties": 32,
+      "additionalProperties": false,
+      "type": "object",
+      "minProperties": 1
     },
     "CalculatedColumn": {
       "description": "<p>A calculated column for a dataset.</p>",
@@ -649,6 +1720,9 @@
       "properties": {
         "RefreshConfiguration": {
           "$ref": "#/definitions/RefreshConfiguration"
+        },
+        "FailureConfiguration": {
+          "$ref": "#/definitions/RefreshFailureConfiguration"
         }
       }
     },
@@ -662,7 +1736,7 @@
           "type": "string"
         },
         "InputColumns": {
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 2048,
           "description": "<p>A physical table type for an S3 data source.</p>\n         <note>\n            <p>For files that aren't JSON, only <code>STRING</code> data types are supported in input columns.</p>\n         </note>",
           "type": "array",
@@ -670,7 +1744,9 @@
             "$ref": "#/definitions/InputColumn"
           }
         },
-        "UploadSettings": {}
+        "UploadSettings": {
+          "$ref": "#/definitions/UploadSettings"
+        }
       },
       "required": [
         "DataSourceArn",
@@ -699,39 +1775,16 @@
         }
       }
     },
-    "InputColumn": {
-      "description": "<p>Metadata for a column that is used as the input of a transform operation.</p>",
+    "DataSetStringFilterValue": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "Type": {
-          "$ref": "#/definitions/InputColumnDataType"
-        },
-        "SubType": {
-          "$ref": "#/definitions/ColumnDataSubType"
-        },
-        "Name": {
-          "minLength": 1,
-          "description": "<p>The name of this column in the underlying data source.</p>",
+        "StaticValue": {
+          "minLength": 0,
           "type": "string",
-          "maxLength": 127
+          "maxLength": 512
         }
-      },
-      "required": [
-        "Name",
-        "Type"
-      ]
-    },
-    "LogicalTableMap": {
-      "patternProperties": {
-        "^[0-9a-zA-Z-]*$": {
-          "$ref": "#/definitions/LogicalTable"
-        }
-      },
-      "maxProperties": 64,
-      "additionalProperties": false,
-      "type": "object",
-      "minProperties": 1
+      }
     },
     "IncrementalRefresh": {
       "description": "<p>The incremental refresh configuration for a dataset.</p>",
@@ -763,6 +1816,11 @@
         "SubType": {
           "$ref": "#/definitions/ColumnDataSubType"
         },
+        "Id": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
         "Name": {
           "minLength": 1,
           "description": "<p>The display name of the column..</p>",
@@ -776,6 +1834,9 @@
       "additionalProperties": false,
       "type": "object",
       "properties": {
+        "SaaSTable": {
+          "$ref": "#/definitions/SaaSTable"
+        },
         "RelationalTable": {
           "$ref": "#/definitions/RelationalTable"
         },
@@ -794,41 +1855,18 @@
         "FIXED"
       ]
     },
-    "DateTimeDatasetParameterDefaultValues": {
-      "description": "<p>The default values of a date time parameter.</p>",
+    "DataPrepAggregationFunction": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "StaticValues": {
-          "minItems": 0,
-          "maxItems": 32,
-          "description": "<p>A list of static default values for a given date time parameter.</p>",
-          "type": "array",
-          "items": {
-            "description": "<p>The default value for the date time parameter.</p>",
-            "type": "string"
-          }
-        }
-      }
-    },
-    "LogicalTableSource": {
-      "description": "<p>Information about the source of a logical table. This is a variant type structure. For\n            this structure to be valid, only one of the attributes can be non-null.</p>",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "PhysicalTableId": {
-          "minLength": 1,
-          "pattern": "^[0-9a-zA-Z-]*$",
-          "description": "<p>Physical table ID.</p>",
-          "type": "string",
-          "maxLength": 64
+        "PercentileAggregation": {
+          "$ref": "#/definitions/DataPrepPercentileAggregationFunction"
         },
-        "JoinInstruction": {
-          "$ref": "#/definitions/JoinInstruction"
+        "SimpleAggregation": {
+          "$ref": "#/definitions/DataPrepSimpleAggregationFunction"
         },
-        "DataSetArn": {
-          "description": "<p>The Amazon Resource Number (ARN) of the parent dataset.</p>",
-          "type": "string"
+        "ListAggregation": {
+          "$ref": "#/definitions/DataPrepListAggregationFunction"
         }
       }
     },
@@ -844,13 +1882,6 @@
           "$ref": "#/definitions/ColumnDescription"
         }
       }
-    },
-    "TextQualifier": {
-      "type": "string",
-      "enum": [
-        "DOUBLE_QUOTE",
-        "SINGLE_QUOTE"
-      ]
     },
     "ColumnDescription": {
       "description": "<p>Metadata that contains a description for a column.</p>",
@@ -870,6 +1901,23 @@
       "enum": [
         "SPICE",
         "DIRECT_QUERY"
+      ]
+    },
+    "JoinOperandProperties": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "OutputColumnNameOverrides": {
+          "minItems": 1,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutputColumnNameOverride"
+          }
+        }
+      },
+      "required": [
+        "OutputColumnNameOverrides"
       ]
     },
     "RowLevelPermissionDataSet": {
@@ -933,6 +1981,51 @@
         "NewColumnName"
       ]
     },
+    "DataPrepListAggregationFunction": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Distinct": {
+          "default": false,
+          "type": "boolean"
+        },
+        "InputColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "Separator": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Distinct",
+        "Separator"
+      ]
+    },
+    "TransformOperationSource": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "TransformOperationId": {
+          "minLength": 1,
+          "pattern": "^[0-9a-zA-Z-]*$",
+          "type": "string",
+          "maxLength": 64
+        },
+        "ColumnIdMappings": {
+          "minItems": 1,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSetColumnIdMapping"
+          }
+        }
+      },
+      "required": [
+        "TransformOperationId"
+      ]
+    },
     "FieldFolderMap": {
       "patternProperties": {
         ".+": {
@@ -942,6 +2035,43 @@
       "additionalProperties": false,
       "type": "object"
     },
+    "DataSetNumericFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "RangeFilterCondition": {
+          "$ref": "#/definitions/DataSetNumericRangeFilterCondition"
+        },
+        "ComparisonFilterCondition": {
+          "$ref": "#/definitions/DataSetNumericComparisonFilterCondition"
+        }
+      }
+    },
+    "DataSetDateRangeFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "IncludeMaximum": {
+          "default": null,
+          "type": "boolean"
+        },
+        "RangeMinimum": {
+          "$ref": "#/definitions/DataSetDateFilterValue"
+        },
+        "RangeMaximum": {
+          "$ref": "#/definitions/DataSetDateFilterValue"
+        },
+        "IncludeMinimum": {
+          "default": null,
+          "type": "boolean"
+        }
+      }
+    },
     "RowLevelPermissionFormatVersion": {
       "type": "string",
       "enum": [
@@ -949,36 +2079,33 @@
         "VERSION_2"
       ]
     },
-    "DecimalDatasetParameter": {
-      "description": "<p>A decimal parameter for a dataset.</p>",
+    "AppendOperation": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "ValueType": {
-          "$ref": "#/definitions/DatasetParameterValueType"
+        "AppendedColumns": {
+          "minItems": 0,
+          "maxItems": 2048,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AppendedColumn"
+          }
         },
-        "DefaultValues": {
-          "$ref": "#/definitions/DecimalDatasetParameterDefaultValues"
+        "SecondSource": {
+          "$ref": "#/definitions/TransformOperationSource"
         },
-        "Id": {
+        "Alias": {
           "minLength": 1,
-          "pattern": "^[a-zA-Z0-9-]+$",
-          "description": "<p>An identifier for the decimal parameter created in the dataset.</p>",
           "type": "string",
-          "maxLength": 128
+          "maxLength": 64
         },
-        "Name": {
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "description": "<p>The name of the decimal parameter that is created in the dataset.</p>",
-          "type": "string",
-          "maxLength": 2048
+        "FirstSource": {
+          "$ref": "#/definitions/TransformOperationSource"
         }
       },
       "required": [
-        "Id",
-        "Name",
-        "ValueType"
+        "Alias",
+        "AppendedColumns"
       ]
     },
     "ColumnDataType": {
@@ -990,40 +2117,15 @@
         "DATETIME"
       ]
     },
-    "DateTimeDatasetParameter": {
-      "description": "<p>A date time parameter for a dataset.</p>",
+    "DataSetNumericFilterValue": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "ValueType": {
-          "$ref": "#/definitions/DatasetParameterValueType"
-        },
-        "TimeGranularity": {
-          "$ref": "#/definitions/TimeGranularity"
-        },
-        "DefaultValues": {
-          "$ref": "#/definitions/DateTimeDatasetParameterDefaultValues"
-        },
-        "Id": {
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9-]+$",
-          "description": "<p>An identifier for the parameter that is created in the dataset.</p>",
-          "type": "string",
-          "maxLength": 128
-        },
-        "Name": {
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "description": "<p>The name of the date time parameter that is created in the dataset.</p>",
-          "type": "string",
-          "maxLength": 2048
+        "StaticValue": {
+          "default": null,
+          "type": "number"
         }
-      },
-      "required": [
-        "Id",
-        "Name",
-        "ValueType"
-      ]
+      }
     },
     "JoinInstruction": {
       "description": "<p>The instructions associated with a join. </p>",
@@ -1067,6 +2169,30 @@
         "Type"
       ]
     },
+    "SemanticTable": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "DestinationTableId": {
+          "minLength": 1,
+          "pattern": "^[0-9a-zA-Z-]*$",
+          "type": "string",
+          "maxLength": 64
+        },
+        "RowLevelPermissionConfiguration": {
+          "$ref": "#/definitions/RowLevelPermissionConfiguration"
+        }
+      },
+      "required": [
+        "Alias",
+        "DestinationTableId"
+      ]
+    },
     "JoinType": {
       "type": "string",
       "enum": [
@@ -1075,6 +2201,21 @@
         "LEFT",
         "RIGHT"
       ]
+    },
+    "SourceTable": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "PhysicalTableId": {
+          "minLength": 1,
+          "pattern": "^[0-9a-zA-Z-]*$",
+          "type": "string",
+          "maxLength": 64
+        },
+        "DataSet": {
+          "$ref": "#/definitions/ParentDataSet"
+        }
+      }
     },
     "RowLevelPermissionTagConfiguration": {
       "description": "<p>The configuration of tags on a dataset to set row-level security. </p>",
@@ -1122,9 +2263,6 @@
         "TagColumnOperation": {
           "$ref": "#/definitions/TagColumnOperation"
         },
-        "RenameColumnOperation": {
-          "$ref": "#/definitions/RenameColumnOperation"
-        },
         "UntagColumnOperation": {
           "$ref": "#/definitions/UntagColumnOperation"
         },
@@ -1140,8 +2278,27 @@
         "CreateColumnsOperation": {
           "$ref": "#/definitions/CreateColumnsOperation"
         },
+        "RenameColumnOperation": {
+          "$ref": "#/definitions/RenameColumnOperation"
+        },
         "ProjectOperation": {
           "$ref": "#/definitions/ProjectOperation"
+        }
+      }
+    },
+    "ColumnToUnpivot": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "ColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "NewValue": {
+          "minLength": 0,
+          "type": "string",
+          "maxLength": 2047
         }
       }
     },
@@ -1157,68 +2314,63 @@
         "JSON"
       ]
     },
-    "GeoSpatialColumnGroup": {
-      "description": "<p>Geospatial column group that denotes a hierarchy.</p>",
+    "ParentDataSet": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "Columns": {
-          "minItems": 1,
-          "maxItems": 16,
-          "description": "<p>Columns in this hierarchy.</p>",
+        "InputColumns": {
+          "minItems": 0,
+          "maxItems": 2048,
           "type": "array",
           "items": {
-            "minLength": 1,
-            "type": "string",
-            "maxLength": 127
+            "$ref": "#/definitions/InputColumn"
           }
         },
-        "CountryCode": {
-          "$ref": "#/definitions/GeoSpatialCountryCode"
-        },
-        "Name": {
-          "minLength": 1,
-          "description": "<p>A display name for the hierarchy.</p>",
-          "type": "string",
-          "maxLength": 64
+        "DataSetArn": {
+          "type": "string"
         }
       },
       "required": [
-        "Columns",
-        "Name"
+        "DataSetArn",
+        "InputColumns"
       ]
     },
-    "GeoSpatialCountryCode": {
-      "type": "string",
-      "enum": [
-        "US"
-      ]
-    },
-    "OverrideDatasetParameterOperation": {
-      "description": "<p>A transform operation that overrides the dataset parameter values that are defined in another dataset.</p>",
+    "JoinOperation": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "NewDefaultValues": {
-          "$ref": "#/definitions/NewDefaultValues"
-        },
-        "ParameterName": {
+        "OnClause": {
           "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "description": "<p>The name of the parameter to be overridden with different values.</p>",
           "type": "string",
-          "maxLength": 2048
+          "maxLength": 512
         },
-        "NewParameterName": {
+        "Type": {
+          "$ref": "#/definitions/JoinOperationType"
+        },
+        "RightOperandProperties": {
+          "$ref": "#/definitions/JoinOperandProperties"
+        },
+        "LeftOperandProperties": {
+          "$ref": "#/definitions/JoinOperandProperties"
+        },
+        "Alias": {
           "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "description": "<p>The new name for the parameter.</p>",
           "type": "string",
-          "maxLength": 2048
+          "maxLength": 64
+        },
+        "LeftOperand": {
+          "$ref": "#/definitions/TransformOperationSource"
+        },
+        "RightOperand": {
+          "$ref": "#/definitions/TransformOperationSource"
         }
       },
       "required": [
-        "ParameterName"
+        "Alias",
+        "LeftOperand",
+        "RightOperand",
+        "Type",
+        "OnClause"
       ]
     },
     "UniqueKey": {
@@ -1279,8 +2431,9 @@
           "type": "array",
           "items": {
             "default": 0,
+            "format": "int64",
             "description": "<p>The default value for the integer parameter.</p>",
-            "type": "number"
+            "type": "integer"
           }
         },
         "StringStaticValues": {
@@ -1307,40 +2460,40 @@
         }
       }
     },
-    "DatasetParameter": {
-      "description": "<p>A dataset parameter.</p>",
+    "DataPrepPercentileAggregationFunction": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "IntegerDatasetParameter": {
-          "$ref": "#/definitions/IntegerDatasetParameter"
+        "InputColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
         },
-        "DateTimeDatasetParameter": {
-          "$ref": "#/definitions/DateTimeDatasetParameter"
-        },
-        "DecimalDatasetParameter": {
-          "$ref": "#/definitions/DecimalDatasetParameter"
-        },
-        "StringDatasetParameter": {
-          "$ref": "#/definitions/StringDatasetParameter"
+        "PercentileValue": {
+          "default": 0,
+          "maximum": 100,
+          "type": "number",
+          "minimum": 0
         }
-      }
+      },
+      "required": [
+        "PercentileValue"
+      ]
     },
-    "IntegerDatasetParameterDefaultValues": {
-      "description": "<p>The default values of an integer parameter.</p>",
+    "DataSetDateFilterCondition": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "StaticValues": {
-          "minItems": 0,
-          "maxItems": 32,
-          "description": "<p>A list of static default values for a given integer parameter.</p>",
-          "type": "array",
-          "items": {
-            "default": 0,
-            "description": "<p>The default value for the integer parameter.</p>",
-            "type": "number"
-          }
+        "ColumnName": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 127
+        },
+        "RangeFilterCondition": {
+          "$ref": "#/definitions/DataSetDateRangeFilterCondition"
+        },
+        "ComparisonFilterCondition": {
+          "$ref": "#/definitions/DataSetDateComparisonFilterCondition"
         }
       }
     },
@@ -1361,54 +2514,39 @@
         }
       }
     },
-    "StringDatasetParameterDefaultValues": {
-      "description": "<p>The default values of a string parameter.</p>",
+    "DestinationTableSource": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "StaticValues": {
-          "minItems": 0,
-          "maxItems": 32,
-          "description": "<p>A list of static default values for a given string parameter.</p>",
-          "type": "array",
-          "items": {
-            "minLength": 0,
-            "description": "<p>The default value for the string parameter.</p>",
-            "type": "string",
-            "maxLength": 512
-          }
-        }
-      }
-    },
-    "LookbackWindowSizeUnit": {
-      "type": "string",
-      "enum": [
-        "HOUR",
-        "DAY",
-        "WEEK"
-      ]
-    },
-    "Tag": {
-      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
-      "additionalProperties": false,
-      "type": "object",
-      "properties": {
-        "Value": {
+        "TransformOperationId": {
           "minLength": 1,
-          "description": "<p>Tag value.</p>",
+          "pattern": "^[0-9a-zA-Z-]*$",
           "type": "string",
-          "maxLength": 256
-        },
-        "Key": {
-          "minLength": 1,
-          "description": "<p>Tag key.</p>",
-          "type": "string",
-          "maxLength": 128
+          "maxLength": 64
         }
       },
       "required": [
-        "Key",
-        "Value"
+        "TransformOperationId"
+      ]
+    },
+    "DataPrepConfiguration": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "DestinationTableMap": {
+          "$ref": "#/definitions/DestinationTableMap"
+        },
+        "TransformStepMap": {
+          "$ref": "#/definitions/TransformStepMap"
+        },
+        "SourceTableMap": {
+          "$ref": "#/definitions/SourceTableMap"
+        }
+      },
+      "required": [
+        "DestinationTableMap",
+        "SourceTableMap",
+        "TransformStepMap"
       ]
     },
     "ColumnGroup": {
@@ -1437,7 +2575,7 @@
           "maxLength": 168000
         },
         "Columns": {
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 2048,
           "description": "<p>The column schema from the SQL query result set.</p>",
           "type": "array",
@@ -1453,49 +2591,85 @@
         }
       },
       "required": [
+        "Columns",
         "DataSourceArn",
         "Name",
         "SqlQuery"
       ]
     },
-    "ProjectOperation": {
-      "description": "<p>A transform operation that projects columns. Operations that come after a projection\n            can only refer to projected columns.</p>",
+    "DataSetStringListFilterValue": {
       "additionalProperties": false,
       "type": "object",
       "properties": {
-        "ProjectedColumns": {
-          "minItems": 1,
-          "maxItems": 2000,
-          "description": "<p>Projected columns.</p>",
+        "StaticValues": {
+          "minItems": 0,
+          "maxItems": 1000,
           "type": "array",
           "items": {
-            "type": "string"
+            "minLength": 0,
+            "type": "string",
+            "maxLength": 512
           }
+        }
+      }
+    },
+    "AggregateOperation": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "GroupByColumnNames": {
+          "minItems": 0,
+          "maxItems": 128,
+          "type": "array",
+          "items": {
+            "minLength": 1,
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "Alias": {
+          "minLength": 1,
+          "type": "string",
+          "maxLength": 64
+        },
+        "Aggregations": {
+          "minItems": 0,
+          "maxItems": 128,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Aggregation"
+          }
+        },
+        "Source": {
+          "$ref": "#/definitions/TransformOperationSource"
         }
       },
       "required": [
-        "ProjectedColumns"
+        "Alias",
+        "Source",
+        "Aggregations"
+      ]
+    },
+    "DataSetDateComparisonFilterCondition": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "Operator": {
+          "$ref": "#/definitions/DataSetDateComparisonFilterOperator"
+        },
+        "Value": {
+          "$ref": "#/definitions/DataSetDateFilterValue"
+        }
+      },
+      "required": [
+        "Operator"
       ]
     }
   },
   "properties": {
-    "PhysicalTableMap": {
-      "$ref": "#/definitions/PhysicalTableMap"
-    },
     "CreatedTime": {
       "format": "string",
       "description": "<p>The time that this dataset was created.</p>",
-      "type": "string"
-    },
-    "FieldFolders": {
-      "$ref": "#/definitions/FieldFolderMap"
-    },
-    "LastUpdatedTime": {
-      "format": "string",
-      "description": "<p>The last time that this dataset was updated.</p>",
-      "type": "string"
-    },
-    "DataSetId": {
       "type": "string"
     },
     "FolderArns": {
@@ -1512,17 +2686,8 @@
       "description": "<p>The amount of SPICE capacity used by this dataset. This is 0 if the dataset isn't\n            imported into SPICE.</p>",
       "type": "number"
     },
-    "PerformanceConfiguration": {
-      "$ref": "#/definitions/PerformanceConfiguration"
-    },
     "RowLevelPermissionDataSet": {
       "$ref": "#/definitions/RowLevelPermissionDataSet"
-    },
-    "DataSetRefreshProperties": {
-      "$ref": "#/definitions/DataSetRefreshProperties"
-    },
-    "RowLevelPermissionTagConfiguration": {
-      "$ref": "#/definitions/RowLevelPermissionTagConfiguration"
     },
     "IngestionWaitPolicy": {
       "$ref": "#/definitions/IngestionWaitPolicy"
@@ -1540,6 +2705,53 @@
       "description": "<p>The display name for the dataset.</p>",
       "type": "string",
       "maxLength": 128
+    },
+    "Permissions": {
+      "minItems": 1,
+      "maxItems": 64,
+      "description": "<p>A list of resource permissions on the dataset.</p>",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResourcePermission"
+      }
+    },
+    "UseAs": {
+      "$ref": "#/definitions/DataSetUseAs"
+    },
+    "Tags": {
+      "minItems": 1,
+      "maxItems": 200,
+      "description": "<p>Contains a map of the key-value pairs for the resource tag or tags assigned to the dataset.</p>",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Tag"
+      }
+    },
+    "PhysicalTableMap": {
+      "$ref": "#/definitions/PhysicalTableMap"
+    },
+    "FieldFolders": {
+      "$ref": "#/definitions/FieldFolderMap"
+    },
+    "LastUpdatedTime": {
+      "format": "string",
+      "description": "<p>The last time that this dataset was updated.</p>",
+      "type": "string"
+    },
+    "SemanticModelConfiguration": {
+      "$ref": "#/definitions/SemanticModelConfiguration"
+    },
+    "DataSetId": {
+      "type": "string"
+    },
+    "PerformanceConfiguration": {
+      "$ref": "#/definitions/PerformanceConfiguration"
+    },
+    "DataSetRefreshProperties": {
+      "$ref": "#/definitions/DataSetRefreshProperties"
+    },
+    "RowLevelPermissionTagConfiguration": {
+      "$ref": "#/definitions/RowLevelPermissionTagConfiguration"
     },
     "ColumnGroups": {
       "minItems": 1,
@@ -1574,15 +2786,6 @@
     "DataSetUsageConfiguration": {
       "$ref": "#/definitions/DataSetUsageConfiguration"
     },
-    "Permissions": {
-      "minItems": 1,
-      "maxItems": 64,
-      "description": "<p>A list of resource permissions on the dataset.</p>",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ResourcePermission"
-      }
-    },
     "OutputColumns": {
       "description": "<p>The list of columns after all transforms. These columns are available in templates,\n            analyses, and dashboards.</p>",
       "type": "array",
@@ -1590,18 +2793,12 @@
         "$ref": "#/definitions/OutputColumn"
       }
     },
+    "DataPrepConfiguration": {
+      "$ref": "#/definitions/DataPrepConfiguration"
+    },
     "Arn": {
       "description": "<p>The Amazon Resource Name (ARN) of the resource.</p>",
       "type": "string"
-    },
-    "Tags": {
-      "minItems": 1,
-      "maxItems": 200,
-      "description": "<p>Contains a map of the key-value pairs for the resource tag or tags assigned to the dataset.</p>",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      }
     }
   },
   "attributes": {
@@ -1610,15 +2807,15 @@
       "description": "<p>The time that this dataset was created.</p>",
       "type": "string"
     },
-    "LastUpdatedTime": {
-      "format": "string",
-      "description": "<p>The last time that this dataset was updated.</p>",
-      "type": "string"
-    },
     "ConsumedSpiceCapacityInBytes": {
       "default": 0,
       "description": "<p>The amount of SPICE capacity used by this dataset. This is 0 if the dataset isn't\n            imported into SPICE.</p>",
       "type": "number"
+    },
+    "LastUpdatedTime": {
+      "format": "string",
+      "description": "<p>The last time that this dataset was updated.</p>",
+      "type": "string"
     },
     "OutputColumns": {
       "description": "<p>The list of columns after all transforms. These columns are available in templates,\n            analyses, and dashboards.</p>",

@@ -28,6 +28,25 @@
         }
       },
       "additionalProperties": false
+    },
+    "SlurmCustomSetting": {
+      "type": "object",
+      "description": "Additional settings that directly map to Slurm settings.",
+      "properties": {
+        "ParameterName": {
+          "type": "string",
+          "description": "AWS PCS supports configuration of the Slurm parameters for queues:."
+        },
+        "ParameterValue": {
+          "type": "string",
+          "description": "The value for the configured Slurm setting."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "ParameterName",
+        "ParameterValue"
+      ]
     }
   },
   "properties": {
@@ -63,6 +82,21 @@
     "Name": {
       "type": "string",
       "description": "The name that identifies the queue."
+    },
+    "SlurmConfiguration": {
+      "type": "object",
+      "description": "The Slurm configuration for the queue.",
+      "properties": {
+        "SlurmCustomSettings": {
+          "type": "array",
+          "description": "Custom Slurm parameters that directly map to Slurm configuration settings.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/SlurmCustomSetting"
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "Status": {
       "type": "string",

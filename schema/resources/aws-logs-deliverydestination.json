@@ -43,16 +43,10 @@
           "maxLength": 60
         },
         "DeliveryDestinationPolicy": {
-          "type": "string",
-          "description": "The contents of the policy attached to the delivery destination",
-          "minLength": 1,
-          "maxLength": 51200
+          "type": "object",
+          "description": "The contents of the policy attached to the delivery destination"
         }
       },
-      "required": [
-        "DeliveryDestinationName",
-        "DeliveryDestinationPolicy"
-      ],
       "additionalProperties": false
     }
   },
@@ -82,7 +76,7 @@
       }
     },
     "DeliveryDestinationType": {
-      "description": "Displays whether this delivery destination is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
+      "description": "Displays whether this delivery destination is CloudWatch Logs, Amazon S3, Kinesis Data Firehose, or XRay.",
       "type": "string",
       "minLength": 1,
       "maxLength": 12,
@@ -91,9 +85,7 @@
     "DeliveryDestinationPolicy": {
       "description": "IAM policy that grants permissions to CloudWatch Logs to deliver logs cross-account to a specified destination in this account.\n\nThe policy must be in JSON string format.\n\nLength Constraints: Maximum length of 51200",
       "type": "object",
-      "items": {
-        "$ref": "#/definitions/DestinationPolicy"
-      }
+      "$ref": "#/definitions/DestinationPolicy"
     },
     "OutputFormat": {
       "description": "The format of the logs that are sent to this delivery destination.",
@@ -110,11 +102,11 @@
   "createOnlyProperties": [
     "/properties/Name",
     "/properties/OutputFormat",
-    "/properties/DestinationResourceArn"
+    "/properties/DestinationResourceArn",
+    "/properties/DeliveryDestinationType"
   ],
   "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/DeliveryDestinationType"
+    "/properties/Arn"
   ],
   "primaryIdentifier": [
     "/properties/Name"
@@ -179,13 +171,6 @@
     "Arn": {
       "description": "The Amazon Resource Name (ARN) that uniquely identifies this delivery destination.",
       "$ref": "#/definitions/Arn"
-    },
-    "DeliveryDestinationType": {
-      "description": "Displays whether this delivery destination is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 12,
-      "pattern": "^[0-9A-Za-z]+$"
     }
   }
 }

@@ -113,7 +113,12 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": true,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "iot:ListTagsForResource",
+      "iot:TagResource",
+      "iot:UntagResource"
+    ]
   },
   "additionalProperties": false,
   "required": [
@@ -144,13 +149,15 @@
         "iot:RegisterCACertificate",
         "iot:DescribeCACertificate",
         "iot:TagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "read": {
       "permissions": [
         "iot:DescribeCACertificate",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "update": {
@@ -161,14 +168,16 @@
         "iot:DescribeCACertificate",
         "iot:TagResource",
         "iot:UntagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "delete": {
       "permissions": [
         "iot:UpdateCACertificate",
         "iot:DeleteCACertificate",
-        "iot:DescribeCACertificate"
+        "iot:DescribeCACertificate",
+        "kms:Decrypt"
       ]
     },
     "list": {

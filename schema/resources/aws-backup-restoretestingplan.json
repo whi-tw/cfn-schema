@@ -54,13 +54,6 @@
         "CONTINUOUS"
       ]
     },
-    "RestoreTestingScheduleStatus": {
-      "type": "string",
-      "enum": [
-        "ACTIVE",
-        "SUSPENDED"
-      ]
-    },
     "Tag": {
       "type": "object",
       "additionalProperties": false,
@@ -99,9 +92,6 @@
     },
     "ScheduleExpressionTimezone": {
       "type": "string"
-    },
-    "ScheduleStatus": {
-      "$ref": "#/definitions/RestoreTestingScheduleStatus"
     },
     "StartWindowHours": {
       "type": "integer"
@@ -146,10 +136,10 @@
     "create": {
       "permissions": [
         "backup:CreateRestoreTestingPlan",
-        "backup:UpdateRestoreTestingPlanScheduleStatus",
         "backup:TagResource",
         "backup:GetRestoreTestingPlan",
-        "backup:ListTags"
+        "backup:ListTags",
+        "iam:CreateServiceLinkedRole"
       ],
       "timeoutInMinutes": 5
     },
@@ -163,7 +153,6 @@
     "update": {
       "permissions": [
         "backup:UpdateRestoreTestingPlan",
-        "backup:UpdateRestoreTestingPlanScheduleStatus",
         "backup:TagResource",
         "backup:UntagResource",
         "backup:GetRestoreTestingPlan",

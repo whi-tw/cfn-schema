@@ -66,6 +66,31 @@
         "REPLICATION",
         "PULL_THROUGH_CACHE"
       ]
+    },
+    "ImageTagMutabilityExclusionFilter": {
+      "type": "object",
+      "description": "A filter that specifies which image tags should be excluded from the repository's image tag mutability setting.",
+      "properties": {
+        "ImageTagMutabilityExclusionFilterType": {
+          "type": "string",
+          "description": "",
+          "enum": [
+            "WILDCARD"
+          ]
+        },
+        "ImageTagMutabilityExclusionFilterValue": {
+          "type": "string",
+          "description": "",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[0-9a-zA-Z._*-]{1,128}"
+        }
+      },
+      "required": [
+        "ImageTagMutabilityExclusionFilterType",
+        "ImageTagMutabilityExclusionFilterValue"
+      ],
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -84,15 +109,27 @@
     },
     "ImageTagMutability": {
       "type": "string",
-      "description": "The tag mutability setting for the repository. If this parameter is omitted, the default setting of MUTABLE will be used which will allow image tags to be overwritten. If IMMUTABLE is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.",
+      "description": "The tag mutability setting for the repository. If this parameter is omitted, the default setting of ``MUTABLE`` will be used which will allow image tags to be overwritten. If ``IMMUTABLE`` is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.",
       "enum": [
         "MUTABLE",
-        "IMMUTABLE"
+        "IMMUTABLE",
+        "IMMUTABLE_WITH_EXCLUSION",
+        "MUTABLE_WITH_EXCLUSION"
       ]
+    },
+    "ImageTagMutabilityExclusionFilters": {
+      "type": "array",
+      "description": "A list of filters that specify which image tags are excluded from the repository creation template's image tag mutability setting.",
+      "minItems": 1,
+      "maxItems": 5,
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/ImageTagMutabilityExclusionFilter"
+      }
     },
     "RepositoryPolicy": {
       "type": "string",
-      "description": "he repository policy to apply to repositories created using the template. A repository policy is a permissions policy associated with a repository to control access permissions."
+      "description": "The repository policy to apply to repositories created using the template. A repository policy is a permissions policy associated with a repository to control access permissions."
     },
     "LifecyclePolicy": {
       "type": "string",

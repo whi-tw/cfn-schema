@@ -1,4 +1,8 @@
 {
+  "sourceUrl": "https://github.com/aws-cloudformation",
+  "tagging": {
+    "taggable": false
+  },
   "handlers": {
     "read": {
       "permissions": [
@@ -20,7 +24,14 @@
     "list": {
       "permissions": [
         "ec2:DescribeFleets"
-      ]
+      ],
+      "handlerSchema": {
+        "properties": {
+          "Type": {
+            "$ref": "resource-schema.json#/properties/Type"
+          }
+        }
+      }
     },
     "delete": {
       "permissions": [
@@ -394,6 +405,13 @@
         "Priority": {
           "type": "number"
         },
+        "BlockDeviceMappings": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlockDeviceMapping"
+          }
+        },
         "AvailabilityZone": {
           "type": "string"
         },
@@ -736,6 +754,10 @@
       ]
     }
   },
+  "required": [
+    "TargetCapacitySpecification",
+    "LaunchTemplateConfigs"
+  ],
   "properties": {
     "Context": {
       "type": "string"
@@ -795,10 +817,6 @@
       "type": "boolean"
     }
   },
-  "required": [
-    "TargetCapacitySpecification",
-    "LaunchTemplateConfigs"
-  ],
   "attributes": {
     "FleetId": {
       "type": "string"

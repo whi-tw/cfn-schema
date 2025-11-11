@@ -65,6 +65,15 @@
       "type": "string",
       "maxLength": 256
     },
+    "EndpointNetworkType": {
+      "description": "The network type of the DB proxy endpoint. The network type determines the IP version that the proxy endpoint supports.",
+      "type": "string",
+      "enum": [
+        "IPV4",
+        "IPV6",
+        "DUAL"
+      ]
+    },
     "TargetRole": {
       "description": "A value that indicates whether the DB proxy endpoint can be used for read/write or read-only operations.",
       "type": "string",
@@ -101,6 +110,7 @@
   "createOnlyProperties": [
     "/properties/DBProxyName",
     "/properties/DBProxyEndpointName",
+    "/properties/EndpointNetworkType",
     "/properties/VpcSubnetIds"
   ],
   "tagging": {
@@ -108,7 +118,12 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": false,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "rds:AddTagsToResource",
+      "rds:RemoveTagsFromResource",
+      "rds:ListTagsForResource"
+    ]
   },
   "primaryIdentifier": [
     "/properties/DBProxyEndpointName"

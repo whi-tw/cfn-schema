@@ -2,24 +2,48 @@
   "typeName": "AWS::Bedrock::Guardrail",
   "description": "Definition of AWS::Bedrock::Guardrail Resource Type",
   "definitions": {
-    "ContentFilter": {
+    "ContentFilterAction": {
+      "type": "string",
+      "enum": [
+        "BLOCK",
+        "NONE"
+      ]
+    },
+    "Modality": {
+      "type": "string",
+      "description": "Modality for filters",
+      "enum": [
+        "TEXT",
+        "IMAGE"
+      ]
+    },
+    "AutomatedReasoningPolicyConfig": {
       "type": "object",
-      "description": "Content filter in content policy.",
+      "description": "Optional configuration for integrating Automated Reasoning policies with the guardrail.",
       "properties": {
-        "Type": {
-          "$ref": "#/definitions/ContentFilterType"
+        "ConfidenceThreshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The confidence threshold for triggering guardrail actions based on Automated Reasoning policy violations."
         },
-        "InputStrength": {
-          "$ref": "#/definitions/FilterStrength"
-        },
-        "OutputStrength": {
-          "$ref": "#/definitions/FilterStrength"
+        "Policies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 15,
+            "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}(:([1-9][0-9]{0,11}))?$",
+            "description": "The Amazon Resource Name (ARN) of the Automated Reasoning policy"
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 2,
+          "description": "The list of Automated Reasoning policy ARNs to include in the guardrail configuration"
         }
       },
       "required": [
-        "InputStrength",
-        "OutputStrength",
-        "Type"
+        "Policies"
       ],
       "additionalProperties": false
     },
@@ -35,6 +59,34 @@
         },
         "OutputStrength": {
           "$ref": "#/definitions/FilterStrength"
+        },
+        "InputModalities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Modality"
+          },
+          "minItems": 1,
+          "description": "List of modalities"
+        },
+        "OutputModalities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Modality"
+          },
+          "minItems": 1,
+          "description": "List of modalities"
+        },
+        "InputAction": {
+          "$ref": "#/definitions/ContentFilterAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/ContentFilterAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -68,12 +120,32 @@
           "maxItems": 6,
           "minItems": 1,
           "description": "List of content filter configs in content policy."
+        },
+        "ContentFiltersTierConfig": {
+          "type": "object",
+          "properties": {
+            "TierName": {
+              "$ref": "#/definitions/ContentFiltersTierName"
+            }
+          },
+          "required": [
+            "TierName"
+          ],
+          "additionalProperties": false,
+          "description": "Guardrail tier config for content policy"
         }
       },
       "required": [
         "FiltersConfig"
       ],
       "additionalProperties": false
+    },
+    "ContextualGroundingAction": {
+      "type": "string",
+      "enum": [
+        "BLOCK",
+        "NONE"
+      ]
     },
     "ContextualGroundingFilterConfig": {
       "type": "object",
@@ -86,6 +158,12 @@
           "type": "number",
           "minimum": 0,
           "description": "The threshold for this filter."
+        },
+        "Action": {
+          "$ref": "#/definitions/ContextualGroundingAction"
+        },
+        "Enabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -130,6 +208,23 @@
         "HIGH"
       ]
     },
+    "GuardrailCrossRegionConfig": {
+      "type": "object",
+      "description": "The system-defined guardrail profile that you\u2019re using with your guardrail",
+      "properties": {
+        "GuardrailProfileArn": {
+          "type": "string",
+          "maxLength": 2048,
+          "minLength": 15,
+          "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail-profile/[a-z0-9-]+[.]{1}guardrail[.]{1}v[0-9:]+$",
+          "description": "The Amazon Resource Name (ARN) of the guardrail profile"
+        }
+      },
+      "required": [
+        "GuardrailProfileArn"
+      ],
+      "additionalProperties": false
+    },
     "GuardrailStatus": {
       "type": "string",
       "description": "Status of the guardrail",
@@ -142,25 +237,24 @@
         "DELETING"
       ]
     },
-    "ManagedWords": {
-      "type": "object",
-      "description": "A managed words definition.",
-      "properties": {
-        "Type": {
-          "$ref": "#/definitions/ManagedWordsType"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "additionalProperties": false
-    },
     "ManagedWordsConfig": {
       "type": "object",
       "description": "A managed words config.",
       "properties": {
         "Type": {
           "$ref": "#/definitions/ManagedWordsType"
+        },
+        "InputAction": {
+          "$ref": "#/definitions/WordAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/WordAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -175,23 +269,6 @@
         "PROFANITY"
       ]
     },
-    "PiiEntity": {
-      "type": "object",
-      "description": "Entity name and behavior.",
-      "properties": {
-        "Type": {
-          "$ref": "#/definitions/PiiEntityType"
-        },
-        "Action": {
-          "$ref": "#/definitions/SensitiveInformationAction"
-        }
-      },
-      "required": [
-        "Action",
-        "Type"
-      ],
-      "additionalProperties": false
-    },
     "PiiEntityConfig": {
       "type": "object",
       "description": "Pii entity configuration.",
@@ -201,6 +278,18 @@
         },
         "Action": {
           "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "InputAction": {
+          "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -269,6 +358,18 @@
         },
         "Action": {
           "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "InputAction": {
+          "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/SensitiveInformationAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -283,7 +384,8 @@
       "description": "Options for sensitive information action.",
       "enum": [
         "BLOCK",
-        "ANONYMIZE"
+        "ANONYMIZE",
+        "NONE"
       ]
     },
     "SensitiveInformationPolicyConfig": {
@@ -335,44 +437,12 @@
       ],
       "additionalProperties": false
     },
-    "Topic": {
-      "type": "object",
-      "description": "Topic in topic policy.",
-      "properties": {
-        "Name": {
-          "type": "string",
-          "maxLength": 100,
-          "minLength": 1,
-          "pattern": "^[0-9a-zA-Z-_ !?.]+$",
-          "description": "Name of topic in topic policy"
-        },
-        "Definition": {
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 1,
-          "description": "Definition of topic in topic policy"
-        },
-        "Examples": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 100,
-            "minLength": 1,
-            "description": "Text example in topic policy"
-          },
-          "minItems": 0,
-          "description": "List of text examples"
-        },
-        "Type": {
-          "$ref": "#/definitions/TopicType"
-        }
-      },
-      "required": [
-        "Definition",
-        "Name",
-        "Type"
-      ],
-      "additionalProperties": false
+    "TopicAction": {
+      "type": "string",
+      "enum": [
+        "BLOCK",
+        "NONE"
+      ]
     },
     "TopicConfig": {
       "type": "object",
@@ -387,7 +457,7 @@
         },
         "Definition": {
           "type": "string",
-          "maxLength": 200,
+          "maxLength": 1000,
           "minLength": 1,
           "description": "Definition of topic in topic policy"
         },
@@ -404,6 +474,18 @@
         },
         "Type": {
           "$ref": "#/definitions/TopicType"
+        },
+        "InputAction": {
+          "$ref": "#/definitions/TopicAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/TopicAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -424,6 +506,19 @@
           },
           "minItems": 1,
           "description": "List of topic configs in topic policy."
+        },
+        "TopicsTierConfig": {
+          "type": "object",
+          "properties": {
+            "TierName": {
+              "$ref": "#/definitions/TopicsTierName"
+            }
+          },
+          "required": [
+            "TierName"
+          ],
+          "additionalProperties": false,
+          "description": "Guardrail tier config for topic policy"
         }
       },
       "required": [
@@ -438,6 +533,13 @@
         "DENY"
       ]
     },
+    "WordAction": {
+      "type": "string",
+      "enum": [
+        "BLOCK",
+        "NONE"
+      ]
+    },
     "WordConfig": {
       "type": "object",
       "description": "A custom word config.",
@@ -446,6 +548,18 @@
           "type": "string",
           "minLength": 1,
           "description": "The custom word text."
+        },
+        "InputAction": {
+          "$ref": "#/definitions/WordAction"
+        },
+        "OutputAction": {
+          "$ref": "#/definitions/WordAction"
+        },
+        "InputEnabled": {
+          "type": "boolean"
+        },
+        "OutputEnabled": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -474,6 +588,22 @@
         }
       },
       "additionalProperties": false
+    },
+    "ContentFiltersTierName": {
+      "type": "string",
+      "description": "Tier name for tier configuration in content filters policy",
+      "enum": [
+        "CLASSIC",
+        "STANDARD"
+      ]
+    },
+    "TopicsTierName": {
+      "type": "string",
+      "description": "Tier name for tier configuration in topic policy",
+      "enum": [
+        "CLASSIC",
+        "STANDARD"
+      ]
     }
   },
   "properties": {
@@ -489,6 +619,9 @@
       "minLength": 1,
       "description": "Messaging for when violations are detected in text"
     },
+    "AutomatedReasoningPolicyConfig": {
+      "$ref": "#/definitions/AutomatedReasoningPolicyConfig"
+    },
     "ContentPolicyConfig": {
       "$ref": "#/definitions/ContentPolicyConfig"
     },
@@ -499,6 +632,9 @@
       "type": "string",
       "description": "Time Stamp",
       "format": "date-time"
+    },
+    "CrossRegionConfig": {
+      "$ref": "#/definitions/GuardrailCrossRegionConfig"
     },
     "Description": {
       "type": "string",
@@ -656,7 +792,12 @@
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,
-    "taggable": true
+    "taggable": true,
+    "permissions": [
+      "bedrock:ListTagsForResource",
+      "bedrock:TagResource",
+      "bedrock:UntagResource"
+    ]
   },
   "additionalProperties": false,
   "attributes": {

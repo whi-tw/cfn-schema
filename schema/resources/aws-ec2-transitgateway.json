@@ -56,6 +56,16 @@
     },
     "PropagationDefaultRouteTableId": {
       "type": "string"
+    },
+    "EncryptionSupport": {
+      "type": "string",
+      "enum": [
+        "disable",
+        "enable"
+      ]
+    },
+    "EncryptionSupportState": {
+      "type": "string"
     }
   },
   "definitions": {
@@ -81,11 +91,15 @@
   ],
   "readOnlyProperties": [
     "/properties/Id",
-    "/properties/TransitGatewayArn"
+    "/properties/TransitGatewayArn",
+    "/properties/EncryptionSupportState"
   ],
   "createOnlyProperties": [
     "/properties/AmazonSideAsn",
     "/properties/MulticastSupport"
+  ],
+  "writeOnlyProperties": [
+    "/properties/EncryptionSupport"
   ],
   "tagging": {
     "taggable": true,
@@ -104,7 +118,9 @@
         "ec2:CreateTransitGateway",
         "ec2:CreateTags",
         "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags"
+        "ec2:DescribeTags",
+        "ec2:ModifyTransitGateway",
+        "ec2:ModifyTransitGatewayOptions"
       ]
     },
     "read": {
@@ -145,6 +161,9 @@
       "type": "string"
     },
     "Id": {
+      "type": "string"
+    },
+    "EncryptionSupportState": {
       "type": "string"
     }
   }

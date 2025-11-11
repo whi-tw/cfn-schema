@@ -111,6 +111,13 @@
         "AWS_LAMBDA"
       ]
     },
+    "IpAddressType": {
+      "type": "string",
+      "enum": [
+        "IPV4",
+        "DUALSTACK"
+      ]
+    },
     "Protocol": {
       "type": "string",
       "enum": [
@@ -293,6 +300,9 @@
     "IdentityProviderType": {
       "$ref": "#/definitions/IdentityProviderType"
     },
+    "IpAddressType": {
+      "$ref": "#/definitions/IpAddressType"
+    },
     "LoggingRole": {
       "type": "string",
       "maxLength": 2048,
@@ -372,12 +382,8 @@
     "/properties/ServerId",
     "/properties/State"
   ],
-  "writeOnlyProperties": [
-    "/properties/IdentityProviderType"
-  ],
   "createOnlyProperties": [
-    "/properties/Domain",
-    "/properties/IdentityProviderType"
+    "/properties/Domain"
   ],
   "primaryIdentifier": [
     "/properties/Arn"
@@ -424,6 +430,9 @@
     "update": {
       "permissions": [
         "apigateway:GET",
+        "ds:AuthorizeApplication",
+        "ds:DescribeDirectories",
+        "ds:UnauthorizeApplication",
         "ec2:AssociateAddress",
         "ec2:CreateVpcEndpoint",
         "ec2:DeleteVpcEndpoints",
@@ -485,7 +494,8 @@
   "additionalProperties": false,
   "conditionalCreateOnlyProperties": [
     "/properties/EndpointDetails",
-    "/properties/EndpointDetails/AddressAllocationIds"
+    "/properties/EndpointDetails/AddressAllocationIds",
+    "/properties/IpAddressType"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
   "attributes": {

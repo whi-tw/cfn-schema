@@ -35,6 +35,7 @@
           "type": "string",
           "enum": [
             "MYSQL_NATIVE_PASSWORD",
+            "MYSQL_CACHING_SHA2_PASSWORD",
             "POSTGRES_SCRAM_SHA_256",
             "POSTGRES_MD5",
             "SQL_SERVER_AUTHENTICATION"
@@ -84,9 +85,26 @@
       "description": "Whether the proxy includes detailed information about SQL statements in its logs.",
       "type": "boolean"
     },
+    "DefaultAuthScheme": {
+      "description": "The default authentication scheme that the proxy uses for client connections to the proxy and connections from the proxy to the underlying database.",
+      "type": "string",
+      "enum": [
+        "IAM_AUTH",
+        "NONE"
+      ]
+    },
     "Endpoint": {
       "description": "The endpoint that you can use to connect to the proxy. You include the endpoint value in the connection string for a database client application.",
       "type": "string"
+    },
+    "EndpointNetworkType": {
+      "description": "The network type of the DB proxy endpoint. The network type determines the IP version that the proxy endpoint supports.",
+      "type": "string",
+      "enum": [
+        "IPV4",
+        "IPV6",
+        "DUAL"
+      ]
     },
     "EngineFamily": {
       "description": "The kinds of databases that the proxy can connect to.",
@@ -117,6 +135,14 @@
         "$ref": "#/definitions/TagFormat"
       }
     },
+    "TargetConnectionNetworkType": {
+      "description": "The network type that the proxy uses to connect to the target database. The network type determines the IP version that the proxy uses for connections to the database.",
+      "type": "string",
+      "enum": [
+        "IPV4",
+        "IPV6"
+      ]
+    },
     "VpcId": {
       "description": "VPC ID to associate with the new DB proxy.",
       "type": "string"
@@ -142,7 +168,6 @@
   },
   "additionalProperties": false,
   "required": [
-    "Auth",
     "DBProxyName",
     "EngineFamily",
     "RoleArn",
@@ -156,6 +181,8 @@
   "createOnlyProperties": [
     "/properties/DBProxyName",
     "/properties/EngineFamily",
+    "/properties/EndpointNetworkType",
+    "/properties/TargetConnectionNetworkType",
     "/properties/VpcSubnetIds"
   ],
   "tagging": {
@@ -163,7 +190,12 @@
     "tagOnCreate": true,
     "tagUpdatable": true,
     "cloudFormationSystemTags": false,
-    "tagProperty": "/properties/Tags"
+    "tagProperty": "/properties/Tags",
+    "permissions": [
+      "rds:AddTagsToResource",
+      "rds:RemoveTagsFromResource",
+      "rds:ListTagsForResource"
+    ]
   },
   "primaryIdentifier": [
     "/properties/DBProxyName"

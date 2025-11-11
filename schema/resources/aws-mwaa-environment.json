@@ -303,6 +303,9 @@
         },
         "Error": {
           "$ref": "#/definitions/UpdateError"
+        },
+        "WorkerReplacementStrategy": {
+          "$ref": "#/definitions/WorkerReplacementStrategy"
         }
       }
     },
@@ -358,6 +361,14 @@
       "type": "string",
       "description": "The webserver VPC endpoint service name, applicable if private webserver access mode selected.",
       "maxLength": 1224
+    },
+    "WorkerReplacementStrategy": {
+      "type": "string",
+      "description": "The worker replacement strategy to use when updating the environment. Valid values: `FORCED`, `GRACEFUL`. FORCED means Apache Airflow workers will be stopped and replaced without waiting for tasks to complete before an update. GRACEFUL means Apache Airflow workers will be able to complete running tasks for up to 12 hours during an update before being stopped and replaced.",
+      "enum": [
+        "FORCED",
+        "GRACEFUL"
+      ]
     }
   },
   "properties": {
@@ -452,6 +463,9 @@
     },
     "WebserverVpcEndpointService": {
       "$ref": "#/definitions/WebserverVpcEndpointService"
+    },
+    "WorkerReplacementStrategy": {
+      "$ref": "#/definitions/WorkerReplacementStrategy"
     }
   },
   "additionalProperties": false,
@@ -476,13 +490,43 @@
     "/properties/LoggingConfiguration/WorkerLogs/CloudWatchLogGroupArn",
     "/properties/LoggingConfiguration/TaskLogs/CloudWatchLogGroupArn"
   ],
+  "writeOnlyProperties": [
+    "/properties/WorkerReplacementStrategy"
+  ],
   "primaryIdentifier": [
     "/properties/Name"
   ],
   "handlers": {
     "create": {
       "permissions": [
-        "airflow:CreateEnvironment"
+        "airflow:GetEnvironment",
+        "airflow:CreateEnvironment",
+        "airflow:TagResource",
+        "airflow:UntagResource",
+        "iam:PassRole",
+        "iam:ListRoles",
+        "iam:CreatePolicy",
+        "iam:AttachRolePolicy",
+        "iam:CreateRole",
+        "iam:CreateServiceLinkedRole",
+        "s3:GetBucketLocation",
+        "s3:ListAllMyBuckets",
+        "s3:ListBucket",
+        "s3:ListBucketVersions",
+        "s3:CreateBucket",
+        "s3:PutObject",
+        "s3:GetEncryptionConfiguration",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs",
+        "ec2:DescribeRouteTables",
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:CreateSecurityGroup",
+        "ec2:CreateVpcEndpoint",
+        "ec2:CreateNetworkInterface",
+        "kms:CreateGrant",
+        "kms:DescribeKey",
+        "kms:ListAliases"
       ],
       "timeoutInMinutes": 180
     },
@@ -493,14 +537,29 @@
     },
     "update": {
       "permissions": [
+        "airflow:GetEnvironment",
         "airflow:UpdateEnvironment",
         "airflow:TagResource",
-        "airflow:UntagResource"
+        "airflow:UntagResource",
+        "iam:PassRole",
+        "iam:ListRoles",
+        "iam:AttachRolePolicy",
+        "s3:GetBucketLocation",
+        "s3:ListBucket",
+        "s3:ListBucketVersions",
+        "s3:GetEncryptionConfiguration",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs",
+        "ec2:DescribeRouteTables",
+        "kms:DescribeKey",
+        "kms:ListAliases"
       ],
-      "timeoutInMinutes": 480
+      "timeoutInMinutes": 900
     },
     "delete": {
       "permissions": [
+        "airflow:GetEnvironment",
         "airflow:DeleteEnvironment"
       ]
     },

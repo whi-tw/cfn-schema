@@ -98,6 +98,9 @@
         },
         "TLSInspectionConfigurationArn": {
           "$ref": "#/definitions/ResourceArn"
+        },
+        "EnableTLSSessionHolding": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -186,6 +189,9 @@
         },
         "Override": {
           "$ref": "#/definitions/StatefulRuleGroupOverride"
+        },
+        "DeepThreatInspection": {
+          "type": "boolean"
         }
       },
       "required": [
