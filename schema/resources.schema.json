@@ -4288,6 +4288,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_EC2_VPCEncryptionControl": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-vpcencryptioncontrol.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-vpcencryptioncontrol.html",
+              "type": "string",
+              "enum": [
+                "AWS::EC2::VPCEncryptionControl"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ec2-vpcencryptioncontrol.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_LookoutEquipment_InferenceScheduler": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lookoutequipment-inferencescheduler.html",
@@ -5144,6 +5172,34 @@
             },
             "Properties": {
               "$ref": "resources/aws-ec2-volume.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "AWS_MediaConnect_RouterInput": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routerinput.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routerinput.html",
+              "type": "string",
+              "enum": [
+                "AWS::MediaConnect::RouterInput"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-mediaconnect-routerinput.json"
             }
           },
           "required": [
@@ -13024,6 +13080,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_EC2_TransitGatewayMeteringPolicyEntry": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-transitgatewaymeteringpolicyentry.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-transitgatewaymeteringpolicyentry.html",
+              "type": "string",
+              "enum": [
+                "AWS::EC2::TransitGatewayMeteringPolicyEntry"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ec2-transitgatewaymeteringpolicyentry.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_Bedrock_FlowAlias": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-bedrock-flowalias.html",
@@ -14300,6 +14384,34 @@
             },
             "Properties": {
               "$ref": "resources/aws-sagemaker-device.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "AWS_VpcLattice_DomainVerification": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-vpclattice-domainverification.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-vpclattice-domainverification.html",
+              "type": "string",
+              "enum": [
+                "AWS::VpcLattice::DomainVerification"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-vpclattice-domainverification.json"
             }
           },
           "required": [
@@ -21676,6 +21788,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_MediaConnect_RouterOutput": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routeroutput.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routeroutput.html",
+              "type": "string",
+              "enum": [
+                "AWS::MediaConnect::RouterOutput"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-mediaconnect-routeroutput.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_RoboMaker_RobotApplication": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-robomaker-robotapplication.html",
@@ -23328,6 +23468,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_EC2_TransitGatewayMeteringPolicy": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-transitgatewaymeteringpolicy.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-transitgatewaymeteringpolicy.html",
+              "type": "string",
+              "enum": [
+                "AWS::EC2::TransitGatewayMeteringPolicy"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ec2-transitgatewaymeteringpolicy.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_IVS_RecordingConfiguration": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ivs-recordingconfiguration.html",
@@ -24756,6 +24924,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_RTBFabric_InboundExternalLink": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rtbfabric-inboundexternallink.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rtbfabric-inboundexternallink.html",
+              "type": "string",
+              "enum": [
+                "AWS::RTBFabric::InboundExternalLink"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-rtbfabric-inboundexternallink.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_Neptune_DBParameterGroup": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-neptune-dbparametergroup.html",
@@ -25736,6 +25932,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_Cognito_Terms": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-terms.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-terms.html",
+              "type": "string",
+              "enum": [
+                "AWS::Cognito::Terms"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-cognito-terms.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_Evidently_Segment": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-evidently-segment.html",
@@ -26620,6 +26844,34 @@
             },
             "Properties": {
               "$ref": "resources/aws-transfer-user.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "AWS_EC2_VPNConcentrator": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-vpnconcentrator.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-vpnconcentrator.html",
+              "type": "string",
+              "enum": [
+                "AWS::EC2::VPNConcentrator"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ec2-vpnconcentrator.json"
             }
           },
           "required": [
@@ -31700,6 +31952,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_ECR_SigningConfiguration": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecr-signingconfiguration.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecr-signingconfiguration.html",
+              "type": "string",
+              "enum": [
+                "AWS::ECR::SigningConfiguration"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ecr-signingconfiguration.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_Synthetics_Group": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-synthetics-group.html",
@@ -36460,6 +36740,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_ECS_ExpressGatewayService": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-expressgatewayservice.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-expressgatewayservice.html",
+              "type": "string",
+              "enum": [
+                "AWS::ECS::ExpressGatewayService"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ecs-expressgatewayservice.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_EMR_WALWorkspace": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-walworkspace.html",
@@ -37776,6 +38084,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_Glue_Integration": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-integration.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-integration.html",
+              "type": "string",
+              "enum": [
+                "AWS::Glue::Integration"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-glue-integration.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_Lightsail_LoadBalancer": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lightsail-loadbalancer.html",
@@ -38476,6 +38812,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_MediaConnect_RouterNetworkInterface": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routernetworkinterface.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediaconnect-routernetworkinterface.html",
+              "type": "string",
+              "enum": [
+                "AWS::MediaConnect::RouterNetworkInterface"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-mediaconnect-routernetworkinterface.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_ApiGateway_Model": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-model.html",
@@ -38784,6 +39148,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_ECR_PullTimeUpdateExclusion": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecr-pulltimeupdateexclusion.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecr-pulltimeupdateexclusion.html",
+              "type": "string",
+              "enum": [
+                "AWS::ECR::PullTimeUpdateExclusion"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-ecr-pulltimeupdateexclusion.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_IAM_ServerCertificate": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-servercertificate.html",
@@ -38828,6 +39220,34 @@
             },
             "Properties": {
               "$ref": "resources/aws-securityhub-findingaggregator.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "AWS_CloudFront_ConnectionFunction": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-connectionfunction.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-connectionfunction.html",
+              "type": "string",
+              "enum": [
+                "AWS::CloudFront::ConnectionFunction"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-cloudfront-connectionfunction.json"
             }
           },
           "required": [
@@ -41416,6 +41836,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_CloudFront_TrustStore": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-truststore.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-truststore.html",
+              "type": "string",
+              "enum": [
+                "AWS::CloudFront::TrustStore"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-cloudfront-truststore.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_DeviceFarm_Project": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-devicefarm-project.html",
@@ -41528,22 +41976,22 @@
       ],
       "additionalProperties": false
     },
-    "AWS_Cognito_Terms": {
+    "AWS_Glue_IdentityCenterConfiguration": {
       "type": "object",
-      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-terms.html",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-identitycenterconfiguration.html",
       "allOf": [
         {
           "type": "object",
           "properties": {
             "Type": {
-              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-terms.html",
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-identitycenterconfiguration.html",
               "type": "string",
               "enum": [
-                "AWS::Cognito::Terms"
+                "AWS::Glue::IdentityCenterConfiguration"
               ]
             },
             "Properties": {
-              "$ref": "resources/aws-cognito-terms.json"
+              "$ref": "resources/aws-glue-identitycenterconfiguration.json"
             }
           },
           "required": [
@@ -42053,6 +42501,9 @@
               "$ref": "#/definitions/AWS_FraudDetector_Outcome"
             },
             {
+              "$ref": "#/definitions/AWS_EC2_VPCEncryptionControl"
+            },
+            {
               "$ref": "#/definitions/AWS_LookoutEquipment_InferenceScheduler"
             },
             {
@@ -42144,6 +42595,9 @@
             },
             {
               "$ref": "#/definitions/AWS_EC2_Volume"
+            },
+            {
+              "$ref": "#/definitions/AWS_MediaConnect_RouterInput"
             },
             {
               "$ref": "#/definitions/AWS_Batch_ServiceEnvironment"
@@ -42989,6 +43443,9 @@
               "$ref": "#/definitions/AWS_Panorama_PackageVersion"
             },
             {
+              "$ref": "#/definitions/AWS_EC2_TransitGatewayMeteringPolicyEntry"
+            },
+            {
               "$ref": "#/definitions/AWS_Bedrock_FlowAlias"
             },
             {
@@ -43125,6 +43582,9 @@
             },
             {
               "$ref": "#/definitions/AWS_SageMaker_Device"
+            },
+            {
+              "$ref": "#/definitions/AWS_VpcLattice_DomainVerification"
             },
             {
               "$ref": "#/definitions/AWS_SecurityHub_OrganizationConfiguration"
@@ -43916,6 +44376,9 @@
               "$ref": "#/definitions/AWS_SES_ReceiptRule"
             },
             {
+              "$ref": "#/definitions/AWS_MediaConnect_RouterOutput"
+            },
+            {
               "$ref": "#/definitions/AWS_RoboMaker_RobotApplication"
             },
             {
@@ -44093,6 +44556,9 @@
               "$ref": "#/definitions/AWS_SecurityLake_SubscriberNotification"
             },
             {
+              "$ref": "#/definitions/AWS_EC2_TransitGatewayMeteringPolicy"
+            },
+            {
               "$ref": "#/definitions/AWS_IVS_RecordingConfiguration"
             },
             {
@@ -44246,6 +44712,9 @@
               "$ref": "#/definitions/AWS_Glue_Partition"
             },
             {
+              "$ref": "#/definitions/AWS_RTBFabric_InboundExternalLink"
+            },
+            {
               "$ref": "#/definitions/AWS_Neptune_DBParameterGroup"
             },
             {
@@ -44351,6 +44820,9 @@
               "$ref": "#/definitions/AWS_Evidently_Project"
             },
             {
+              "$ref": "#/definitions/AWS_Cognito_Terms"
+            },
+            {
               "$ref": "#/definitions/AWS_Evidently_Segment"
             },
             {
@@ -44445,6 +44917,9 @@
             },
             {
               "$ref": "#/definitions/AWS_Transfer_User"
+            },
+            {
+              "$ref": "#/definitions/AWS_EC2_VPNConcentrator"
             },
             {
               "$ref": "#/definitions/AWS_SSO_Assignment"
@@ -44990,6 +45465,9 @@
               "$ref": "#/definitions/AWS_Greengrass_CoreDefinitionVersion"
             },
             {
+              "$ref": "#/definitions/AWS_ECR_SigningConfiguration"
+            },
+            {
               "$ref": "#/definitions/AWS_Synthetics_Group"
             },
             {
@@ -45500,6 +45978,9 @@
               "$ref": "#/definitions/AWS_DirectoryService_SimpleAD"
             },
             {
+              "$ref": "#/definitions/AWS_ECS_ExpressGatewayService"
+            },
+            {
               "$ref": "#/definitions/AWS_EMR_WALWorkspace"
             },
             {
@@ -45641,6 +46122,9 @@
               "$ref": "#/definitions/AWS_IoTWireless_ServiceProfile"
             },
             {
+              "$ref": "#/definitions/AWS_Glue_Integration"
+            },
+            {
               "$ref": "#/definitions/AWS_Lightsail_LoadBalancer"
             },
             {
@@ -45716,6 +46200,9 @@
               "$ref": "#/definitions/AWS_ApplicationInsights_Application"
             },
             {
+              "$ref": "#/definitions/AWS_MediaConnect_RouterNetworkInterface"
+            },
+            {
               "$ref": "#/definitions/AWS_ApiGateway_Model"
             },
             {
@@ -45749,10 +46236,16 @@
               "$ref": "#/definitions/AWS_SageMaker_DataQualityJobDefinition"
             },
             {
+              "$ref": "#/definitions/AWS_ECR_PullTimeUpdateExclusion"
+            },
+            {
               "$ref": "#/definitions/AWS_IAM_ServerCertificate"
             },
             {
               "$ref": "#/definitions/AWS_SecurityHub_FindingAggregator"
+            },
+            {
+              "$ref": "#/definitions/AWS_CloudFront_ConnectionFunction"
             },
             {
               "$ref": "#/definitions/AWS_B2BI_Profile"
@@ -46031,6 +46524,9 @@
               "$ref": "#/definitions/AWS_DeviceFarm_TestGridProject"
             },
             {
+              "$ref": "#/definitions/AWS_CloudFront_TrustStore"
+            },
+            {
               "$ref": "#/definitions/AWS_DeviceFarm_Project"
             },
             {
@@ -46043,7 +46539,7 @@
               "$ref": "#/definitions/AWS_GameLiftStreams_StreamGroup"
             },
             {
-              "$ref": "#/definitions/AWS_Cognito_Terms"
+              "$ref": "#/definitions/AWS_Glue_IdentityCenterConfiguration"
             },
             {
               "$ref": "#/definitions/AWS_DeviceFarm_NetworkProfile"
