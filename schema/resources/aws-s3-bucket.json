@@ -117,6 +117,14 @@
       },
       "type": "array"
     },
+    "AbacStatus": {
+      "description": "",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "type": "string"
+    },
     "VersioningConfiguration": {
       "$ref": "#/definitions/VersioningConfiguration",
       "description": "Enables multiple versions of all objects in this bucket. You might enable versioning to prevent objects from being deleted or overwritten by mistake or to archive objects so that you can retrieve previous versions of them.\n  When you enable versioning on a bucket for the first time, it might take a short amount of time for the change to be fully propagated. We recommend that you wait for 15 minutes after enabling versioning before issuing write operations (``PUT`` or ``DELETE``) on objects in the bucket."
@@ -327,6 +335,10 @@
         "ServerSideEncryptionByDefault": {
           "$ref": "#/definitions/ServerSideEncryptionByDefault",
           "description": "Specifies the default server-side encryption to apply to new objects in the bucket. If a PUT Object request doesn't specify any server-side encryption, this default encryption will be applied."
+        },
+        "BlockedEncryptionTypes": {
+          "$ref": "#/definitions/BlockedEncryptionTypes",
+          "description": ""
         }
       }
     },
@@ -352,6 +364,29 @@
       "required": [
         "SSEAlgorithm"
       ]
+    },
+    "BlockedEncryptionTypes": {
+      "description": "",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EncryptionType": {
+          "$ref": "#/definitions/BlockedEncryptionTypeList"
+        }
+      }
+    },
+    "BlockedEncryptionTypeList": {
+      "description": "List of encryption types.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "SSE-C"
+        ]
+      },
+      "uniqueItems": true,
+      "insertionOrder": true
     },
     "CorsConfiguration": {
       "type": "object",
@@ -1267,7 +1302,7 @@
             "Disabled",
             "Enabled"
           ],
-          "description": "Indicates whether to replicate delete markers. Disabled by default."
+          "description": "Indicates whether to replicate delete markers."
         }
       },
       "description": "Specifies whether Amazon S3 replicates delete markers. If you specify a ``Filter`` in your replication configuration, you must also include a ``DeleteMarkerReplication`` element. If your ``Filter`` includes a ``Tag`` element, the ``DeleteMarkerReplication````Status`` must be set to Disabled, because Amazon S3 does not support replicating delete markers for tag-based rules. For an example configuration, see [Basic Rule Configuration](https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-add-config.html#replication-config-min-rule-config). \n For more information about delete marker replication, see [Basic Rule Configuration](https://docs.aws.amazon.com/AmazonS3/latest/dev/delete-marker-replication.html). \n  If you are using an earlier version of the replication configuration, Amazon S3 handles replication of delete markers differently. For more information, see [Backward Compatibility](https://docs.aws.amazon.com/AmazonS3/latest/dev/replication-add-config.html#replication-backward-compat-considerations)."
@@ -1521,7 +1556,7 @@
       "description": "A container of a key value name pair."
     },
     "VersioningConfiguration": {
-      "description": "Describes the versioning state of an Amazon S3 bucket. For more information, see [PUT Bucket versioning](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTVersioningStatus.html) in the *Amazon S3 API Reference*.\n  When you enable versioning on a bucket for the first time, it might take a short amount of time for the change to be fully propagated. We recommend that you wait for 15 minutes after enabling versioning before issuing write operations (``PUT`` or ``DELETE``) on objects in the bucket.",
+      "description": "Describes the versioning state of an Amazon S3 bucket. For more information, see [PUT Bucket versioning](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTVersioningStatus.html) in the *Amazon S3 API Reference*.\n Keep the following timing in mind when enabling, suspending, or transitioning between versioning states:\n  +  *Enabling versioning* - Changes may take up to 15 minutes to propagate across all AWS regions for full consistency.\n  +  *Suspending versioning* - Takes effect immediately with no propagation delay.\n  +  *Transitioning between states* - Any change from Suspended to Enabled has a 15-minute delay.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1855,7 +1890,10 @@
     "permissions": [
       "s3:PutBucketTagging",
       "s3:GetBucketTagging",
-      "s3:DeleteBucketTagging"
+      "s3:DeleteBucketTagging",
+      "s3:TagResource",
+      "s3:UntagResource",
+      "s3:ListTagsForResource"
     ]
   },
   "createOnlyProperties": [
@@ -1899,6 +1937,8 @@
       "permissions": [
         "s3:CreateBucket",
         "s3:PutBucketTagging",
+        "s3:TagResource",
+        "s3:PutBucketAbac",
         "s3:PutAnalyticsConfiguration",
         "s3:PutEncryptionConfiguration",
         "s3:PutBucketCORS",
@@ -1928,6 +1968,7 @@
         "s3tables:CreateTable",
         "s3tables:CreateTableBucket",
         "s3tables:GetTable",
+        "s3tables:PutTableBucketPolicy",
         "s3tables:PutTableEncryption",
         "s3tables:PutTablePolicy",
         "s3tables:GetTableMetadataLocation",
@@ -1952,6 +1993,8 @@
         "s3:GetBucketPublicAccessBlock",
         "s3:GetBucketObjectLockConfiguration",
         "s3:GetBucketTagging",
+        "s3:ListTagsForResource",
+        "s3:GetBucketAbac",
         "s3:GetBucketOwnershipControls",
         "s3:GetIntelligentTieringConfiguration",
         "s3:GetBucketMetadataTableConfiguration",
@@ -1962,6 +2005,9 @@
       "permissions": [
         "s3:PutBucketAcl",
         "s3:PutBucketTagging",
+        "s3:TagResource",
+        "s3:UntagResource",
+        "s3:PutBucketAbac",
         "s3:PutAnalyticsConfiguration",
         "s3:PutEncryptionConfiguration",
         "s3:PutBucketCORS",
@@ -1981,6 +2027,7 @@
         "s3tables:CreateTable",
         "s3tables:CreateTableBucket",
         "s3tables:GetTable",
+        "s3tables:PutTableBucketPolicy",
         "s3tables:PutTableEncryption",
         "s3tables:PutTablePolicy",
         "s3tables:GetTableMetadataLocation",
