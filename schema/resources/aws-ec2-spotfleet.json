@@ -665,6 +665,9 @@
             ]
           }
         },
+        "RequireEncryptionInTransit": {
+          "type": "boolean"
+        },
         "MemoryGiBPerVCpu": {
           "$ref": "#/definitions/MemoryGiBPerVCpuRequest"
         },
@@ -676,7 +679,8 @@
             "enum": [
               "gpu",
               "fpga",
-              "inference"
+              "inference",
+              "media"
             ]
           }
         },
@@ -804,7 +808,14 @@
               "t4",
               "t4g",
               "vu9p",
-              "v100"
+              "v100",
+              "l40s",
+              "l4",
+              "gaudi-hl-205",
+              "inferentia2",
+              "trainium",
+              "trainium2",
+              "u30"
             ]
           }
         },
@@ -1012,6 +1023,14 @@
     },
     "Id": {
       "type": "string"
+    },
+    "Tags": {
+      "uniqueItems": false,
+      "description": "The tags to specify in SpotFleetRequestConfigData",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Tag"
+      }
     }
   },
   "attributes": {

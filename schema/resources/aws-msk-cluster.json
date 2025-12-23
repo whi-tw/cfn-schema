@@ -70,6 +70,9 @@
         "LOCAL",
         "TIERED"
       ]
+    },
+    "Rebalancing": {
+      "$ref": "#/definitions/Rebalancing"
     }
   },
   "definitions": {
@@ -230,6 +233,13 @@
         }
       }
     },
+    "NetworkType": {
+      "type": "string",
+      "enum": [
+        "IPV4",
+        "DUAL"
+      ]
+    },
     "ConfigurationInfo": {
       "type": "object",
       "additionalProperties": false,
@@ -288,6 +298,22 @@
         "InstanceType"
       ]
     },
+    "Rebalancing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Status": {
+          "type": "string",
+          "enum": [
+            "PAUSED",
+            "ACTIVE"
+          ]
+        }
+      },
+      "required": [
+        "Status"
+      ]
+    },
     "EncryptionAtRest": {
       "type": "object",
       "additionalProperties": false,
@@ -330,6 +356,9 @@
         },
         "VpcConnectivity": {
           "$ref": "#/definitions/VpcConnectivity"
+        },
+        "NetworkType": {
+          "$ref": "#/definitions/NetworkType"
         }
       }
     },
@@ -521,7 +550,8 @@
     "/properties/Arn"
   ],
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/CurrentVersion"
   ],
   "tagging": {
     "taggable": true,
@@ -575,13 +605,16 @@
         "kafka:UpdateStorage",
         "kafka:UpdateSecurity",
         "kafka:UpdateConnectivity",
+        "kafka:UpdateRebalancing",
         "kafka:DescribeCluster",
         "kafka:DescribeClusterOperation",
         "kafka:TagResource",
         "kafka:UntagResource",
+        "ec2:CreateTags",
         "ec2:DescribeSubnets",
         "ec2:DescribeVpcs",
         "ec2:DescribeSecurityGroups",
+        "ec2:DescribeRouteTables",
         "iam:AttachRolePolicy",
         "iam:CreateServiceLinkedRole",
         "iam:PutRolePolicy",
@@ -621,6 +654,10 @@
   },
   "attributes": {
     "Arn": {
+      "type": "string"
+    },
+    "CurrentVersion": {
+      "description": "The current version of the MSK cluster",
       "type": "string"
     }
   }
