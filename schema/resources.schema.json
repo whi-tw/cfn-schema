@@ -29740,6 +29740,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_QuickSight_ActionConnector": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-actionconnector.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-actionconnector.html",
+              "type": "string",
+              "enum": [
+                "AWS::QuickSight::ActionConnector"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-quicksight-actionconnector.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_OpsWorks_Layer": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opsworks-layer.html",
@@ -41584,6 +41612,34 @@
       ],
       "additionalProperties": false
     },
+    "AWS_DocDB_GlobalCluster": {
+      "type": "object",
+      "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-docdb-globalcluster.html",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-docdb-globalcluster.html",
+              "type": "string",
+              "enum": [
+                "AWS::DocDB::GlobalCluster"
+              ]
+            },
+            "Properties": {
+              "$ref": "resources/aws-docdb-globalcluster.json"
+            }
+          },
+          "required": [
+            "Type"
+          ]
+        },
+        {
+          "$ref": "resource.attributes.schema.json#/definitions/ResourceAttributes"
+        }
+      ],
+      "additionalProperties": false
+    },
     "AWS_BillingConductor_CustomLineItem": {
       "type": "object",
       "description": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-billingconductor-customlineitem.html",
@@ -45536,6 +45592,9 @@
               "$ref": "#/definitions/AWS_SMSVOICE_PhoneNumber"
             },
             {
+              "$ref": "#/definitions/AWS_QuickSight_ActionConnector"
+            },
+            {
               "$ref": "#/definitions/AWS_OpsWorks_Layer"
             },
             {
@@ -46803,6 +46862,9 @@
             },
             {
               "$ref": "#/definitions/AWS_IVS_IngestConfiguration"
+            },
+            {
+              "$ref": "#/definitions/AWS_DocDB_GlobalCluster"
             },
             {
               "$ref": "#/definitions/AWS_BillingConductor_CustomLineItem"
